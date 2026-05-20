@@ -1,4 +1,5 @@
 // src/app/field/page.tsx
+import Link from "next/link";
 import { getFieldHomeData } from "@/lib/queries/field-home";
 import { getSession } from "@/lib/session";
 import { BeneficiaryCard } from "@/components/beneficiary-card";
@@ -77,6 +78,14 @@ export default async function FieldHome() {
           ))}
         </div>
       </section>
+
+      <Link
+        href="/field/sos"
+        className="fixed md:absolute bottom-20 right-4 z-10 size-14 rounded-full bg-[var(--risk-critical)] text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+        aria-label="Emergency SOS"
+      >
+        <span className="text-xs font-bold">SOS</span>
+      </Link>
     </div>
   );
 }
