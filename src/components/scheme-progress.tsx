@@ -1,4 +1,3 @@
-import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SCHEME_INFO: Record<string, { name: string; totalInstallments: number }> = {
@@ -17,26 +16,24 @@ export function SchemeProgress({
 }) {
   const info = SCHEME_INFO[code];
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between text-xs">
-        <span className="font-medium">{info.name}</span>
-        <span className="text-[var(--fg-muted)] font-mono-num">
-          {disbursed}/{info.totalInstallments}
-        </span>
-      </div>
-      <div className="flex gap-1">
+    <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-1">
         {Array.from({ length: info.totalInstallments }).map((_, i) => (
-          <div
+          <span
             key={i}
+            aria-hidden
             className={cn(
-              "h-2 flex-1 rounded-full flex items-center justify-center",
-              i < disbursed ? "bg-[var(--primary)]" : "bg-[var(--border)]",
+              "size-2.5 rounded-full transition-colors",
+              i < disbursed
+                ? "bg-[var(--primary)] shadow-primary-sm"
+                : "bg-[var(--surface-alt)] border border-[var(--border)]",
             )}
-          >
-            {i < disbursed && <Check className="size-2 text-white" />}
-          </div>
+          />
         ))}
       </div>
+      <span className="text-[11px] text-[var(--fg-muted)] font-mono-num">
+        {disbursed}/{info.totalInstallments}
+      </span>
     </div>
   );
 }

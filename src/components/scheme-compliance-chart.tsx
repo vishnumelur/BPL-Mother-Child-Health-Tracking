@@ -1,17 +1,24 @@
 export function SchemeComplianceChart({
   data,
+  updatedAgo = "12m ago",
 }: {
   data: Array<{ code: string; percent: number }>;
+  updatedAgo?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-4 shadow-card">
-      <div className="space-y-1">
-        <h3 className="text-sm font-semibold text-[var(--fg)]">
-          Scheme compliance
-        </h3>
-        <p className="text-[11px] text-[var(--fg-muted)]">
-          Disbursement % across active schemes
-        </p>
+    <div className="rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-5 shadow-card h-full">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h3 className="text-sm font-semibold text-[var(--fg)] tracking-tight">
+            Scheme compliance
+          </h3>
+          <p className="text-[11px] text-[var(--fg-muted)]">
+            Disbursement % across active schemes
+          </p>
+        </div>
+        <span className="text-[10px] font-mono-num text-[var(--fg-subtle)] uppercase tracking-wider whitespace-nowrap">
+          Updated {updatedAgo}
+        </span>
       </div>
       <div className="space-y-3.5">
         {data.map((d) => (
