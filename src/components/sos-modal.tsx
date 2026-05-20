@@ -1,6 +1,5 @@
 "use client";
 import { useState, useTransition } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Siren, MapPin } from "lucide-react";
 import { raiseSos } from "@/actions/sos";
@@ -20,7 +19,6 @@ export function SosModal({ mothers }: Props) {
   function fire() {
     if (selected == null) return;
     setFired(true);
-    // Simulate fan-out: stagger channels
     setTimeout(() => setChannels([{ to: "field_worker", status: "delivered" }]), 200);
     setTimeout(
       () =>
@@ -39,9 +37,7 @@ export function SosModal({ mothers }: Props) {
         ]),
       1700,
     );
-    // Persist in background
     start(async () => {
-      // demo GPS for Agali
       await raiseSos({
         subjectType: "mother",
         subjectId: selected,
@@ -53,53 +49,75 @@ export function SosModal({ mothers }: Props) {
 
   if (!fired) {
     return (
-      <Card className="p-4 space-y-4 border-[var(--risk-critical)]/40">
-        <div className="flex items-center gap-2 text-[var(--risk-critical)]">
-          <Siren className="size-5" />
-          <h2 className="font-semibold">SOS Emergency</h2>
+      <div className="rounded-2xl border-2 border-[var(--risk-critical)]/30 bg-[var(--card)] p-5 space-y-4">
+        <div className="flex items-center gap-2.5">
+          <div className="size-9 rounded-xl bg-[var(--risk-critical)]/10 flex items-center justify-center">
+            <Siren className="size-5 text-[var(--risk-critical)]" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-[var(--fg)]">SOS Emergency</h2>
+            <p className="text-[11px] text-[var(--fg-muted)]">
+              GPS captured automatically
+            </p>
+          </div>
         </div>
-        <p className="text-sm text-[var(--fg-muted)]">
-          Confirm the patient. GPS location will be captured automatically.
-        </p>
-        <select
-          value={selected ?? ""}
-          onChange={(e) => setSelected(Number(e.target.value))}
-          className="w-full border rounded-md h-9 px-3 bg-white"
-        >
-          {mothers.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name}
-            </option>
-          ))}
-        </select>
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-[var(--fg-muted)]">
+            Patient
+          </label>
+          <select
+            value={selected ?? ""}
+            onChange={(e) => setSelected(Number(e.target.value))}
+            className="w-full border border-[var(--border)] rounded-xl h-11 px-3 bg-[var(--card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
+          >
+            {mothers.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <Button
           onClick={fire}
           disabled={selected == null}
-          className="w-full bg-[var(--risk-critical)] hover:bg-[var(--risk-critical)]/90"
+          className="w-full h-12 rounded-xl bg-[var(--risk-critical)] hover:bg-[var(--risk-critical)]/90 text-white font-semibold"
         >
-          <Siren className="size-4" /> Raise SOS
+          <Siren className="size-4" />
+          Raise SOS
         </Button>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-      <Card className="p-4 space-y-2 border-[var(--risk-critical)]/40">
-        <div className="flex items-center gap-2 text-[var(--risk-critical)]">
-          <Siren className="size-5" />
-          <h2 className="font-semibold">SOS raised</h2>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="space-y-3"
+    >
+      <div className="rounded-2xl border-2 border-[var(--risk-critical)]/30 bg-[var(--card)] p-5 space-y-2">
+        <div className="flex items-center gap-2.5">
+          <div className="size-9 rounded-xl bg-[var(--risk-critical)]/10 flex items-center justify-center">
+            <Siren className="size-5 text-[var(--risk-critical)]" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-[var(--fg)]">SOS raised</h2>
+            <div className="flex items-center gap-1 text-[11px] text-[var(--fg-muted)]">
+              <MapPin className="size-3" />
+              <span className="font-mono-num">11.18°N · 76.72°E</span>
+              <span>·</span>
+              <span>Agali, Attappadi</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-[var(--fg-muted)]">
-          <MapPin className="size-3" />
-          11.18°N, 76.72°E · Agali, Attappadi
-        </div>
-      </Card>
+      </div>
       <SosChannelList channels={channels} />
       {channels.length === 3 && (
-        <Card className="p-3 text-xs text-[var(--fg-muted)] text-center">
-          {pending ? "Logging alert…" : "Alert persisted. Visible to district admin in real time."}
-        </Card>
+        <div className="rounded-xl bg-[var(--primary-50)] px-4 py-3 text-xs text-[var(--primary)] text-center font-medium">
+          {pending
+            ? "Logging alert…"
+            : "Alert persisted · visible to district admin"}
+        </div>
       )}
     </motion.div>
   );

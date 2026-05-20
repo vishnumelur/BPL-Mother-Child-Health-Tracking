@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Smartphone } from "lucide-react";
+import { Smartphone, Check } from "lucide-react";
 
 export interface SmsPreview {
   open: boolean;
@@ -27,20 +27,22 @@ export function SmsPreviewModal({
 }: SmsPreview) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Smartphone className="size-4" />
+          <DialogTitle className="flex items-center gap-2 text-base">
+            <div className="size-7 rounded-lg bg-[var(--primary-50)] flex items-center justify-center">
+              <Smartphone className="size-4 text-[var(--primary)]" />
+            </div>
             SMS Preview
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs">
             Outbound vernacular SMS · would be dispatched via DLT-registered
             gateway in production
           </DialogDescription>
         </DialogHeader>
-        <div className="rounded-lg border bg-slate-50 p-4 space-y-3">
-          <div className="text-xs text-[var(--fg-muted)] flex justify-between">
-            <span>From: {senderId}</span>
+        <div className="rounded-2xl bg-[var(--primary-50)] p-4 space-y-3">
+          <div className="flex justify-between items-center text-[11px] text-[var(--fg-muted)]">
+            <span className="font-mono-num font-medium">{senderId}</span>
             <span className="font-mono-num">
               {sentAt.toLocaleTimeString([], {
                 hour: "2-digit",
@@ -48,15 +50,18 @@ export function SmsPreviewModal({
               })}
             </span>
           </div>
-          <div className="text-xs text-[var(--fg-muted)]">
-            To: {beneficiaryName}
+          <div className="text-[11px] text-[var(--fg-muted)]">
+            To: <span className="text-[var(--fg)] font-medium">{beneficiaryName}</span>
           </div>
-          <div className="font-malayalam text-[var(--fg)] leading-relaxed">
-            {bodyText}
+          <div className="rounded-xl bg-[var(--card)] p-3.5">
+            <p className="font-malayalam text-[var(--fg)] leading-relaxed">
+              {bodyText}
+            </p>
           </div>
         </div>
-        <div className="text-xs text-[var(--fg-muted)]">
-          Status: delivered · 1 SMS · ~70 bytes
+        <div className="flex items-center gap-1.5 text-[11px] text-[var(--primary)] font-medium">
+          <Check className="size-3" strokeWidth={2.5} />
+          Delivered · 1 SMS · ~70 bytes
         </div>
       </DialogContent>
     </Dialog>

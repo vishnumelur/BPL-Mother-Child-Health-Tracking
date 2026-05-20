@@ -12,7 +12,6 @@ export default async function RemindersPage() {
     .orderBy(reminders.dueDate)
     .limit(20);
 
-  // Resolve beneficiary names
   const enriched: ReminderRowData[] = await Promise.all(
     rows.map(async (r) => {
       let name = "Beneficiary";
@@ -37,14 +36,26 @@ export default async function RemindersPage() {
   );
 
   return (
-    <div className="p-4 space-y-3">
-      <h1 className="text-lg font-semibold">Reminders</h1>
-      {enriched.length === 0 && (
-        <p className="text-sm text-[var(--fg-muted)]">No reminders due.</p>
+    <div className="px-4 py-5 sm:px-5 sm:py-6 space-y-5">
+      <header className="space-y-1">
+        <h1 className="text-xl font-semibold text-[var(--fg)] tracking-tight">
+          Reminders
+        </h1>
+        <p className="text-xs text-[var(--fg-muted)]">
+          {enriched.length} due · tap SMS to preview message
+        </p>
+      </header>
+      {enriched.length === 0 ? (
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-alt)] p-8 text-center">
+          <p className="text-sm text-[var(--fg-muted)]">No reminders due.</p>
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          {enriched.map((r) => (
+            <ReminderRow key={r.id} r={r} />
+          ))}
+        </div>
       )}
-      {enriched.map((r) => (
-        <ReminderRow key={r.id} r={r} />
-      ))}
     </div>
   );
 }
