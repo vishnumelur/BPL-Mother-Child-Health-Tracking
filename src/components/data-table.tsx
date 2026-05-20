@@ -13,7 +13,7 @@ export function DataTable({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[var(--border)] bg-[var(--card)] overflow-hidden",
+        "rounded-2xl border border-[var(--border)] bg-white overflow-hidden shadow-card",
         className,
       )}
     >
@@ -31,7 +31,7 @@ export function DataTable({
 
 export function DataTableHead({ children }: { children: React.ReactNode }) {
   return (
-    <thead className="bg-[var(--surface-alt)] border-b border-[var(--border)] text-[11px] uppercase tracking-wide text-[var(--fg-muted)]">
+    <thead className="bg-[var(--surface-alt)] border-b border-[var(--border)] text-[11px] uppercase tracking-[0.06em] text-[var(--fg-muted)]">
       {children}
     </thead>
   );
@@ -47,7 +47,7 @@ export function DataTableRow({
   return (
     <tr
       className={cn(
-        "border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface-alt)]",
+        "border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface-alt)] transition-colors",
         className,
       )}
     >

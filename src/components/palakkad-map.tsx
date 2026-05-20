@@ -22,45 +22,55 @@ function toneFor(b: BlockData): string {
 
 export function PalakkadMap({ data }: { data: BlockData[] }) {
   return (
-    <div className="relative rounded-2xl border border-[var(--border)] bg-[var(--surface-alt)] overflow-hidden p-5 sm:p-6">
-      <div className="flex items-center justify-between mb-3">
+    <div className="relative rounded-2xl border border-[var(--border)] bg-white overflow-hidden p-5 sm:p-6 shadow-card">
+      <div className="flex items-start justify-between mb-4 flex-wrap gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-[var(--fg)]">Palakkad District</h3>
-          <p className="text-[11px] text-[var(--fg-muted)]">
+          <h3 className="text-sm font-semibold text-[var(--fg)]">
+            Palakkad District
+          </h3>
+          <p className="text-[11px] text-[var(--fg-muted)] mt-0.5">
             Attappadi region · block-level risk
           </p>
         </div>
         <div className="flex items-center gap-3 text-[10px] text-[var(--fg-muted)]">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <div className="size-2 rounded-full bg-[var(--primary)]" />
             <span>Normal</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <div className="size-2 rounded-full bg-[var(--risk-high)]" />
             <span>High</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <div className="size-2 rounded-full bg-[var(--risk-critical)]" />
             <span>Critical</span>
           </div>
         </div>
       </div>
-      <div className="relative aspect-[4/3]">
+      <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gradient-mesh">
         <svg
           viewBox="0 0 400 300"
           className="absolute inset-0 size-full"
           aria-hidden
         >
+          <defs>
+            <linearGradient id="district-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#E7F8F3" />
+              <stop offset="100%" stopColor="#F0FBF7" />
+            </linearGradient>
+          </defs>
           <path
             d="M40,80 L120,40 L240,30 L340,70 L370,150 L320,240 L200,270 L80,250 L30,160 Z"
-            fill="var(--card)"
-            stroke="var(--border)"
+            fill="url(#district-fill)"
+            stroke="#00A884"
+            strokeOpacity="0.2"
             strokeWidth="1.5"
           />
         </svg>
         {data.map((b) => {
           const pos = POSITIONS[b.block];
           if (!pos) return null;
+          const tone = toneFor(b);
           return (
             <div
               key={b.block}
@@ -73,15 +83,15 @@ export function PalakkadMap({ data }: { data: BlockData[] }) {
             >
               <div className="relative">
                 <div
-                  className="size-3 rounded-full ring-[3px] ring-white"
-                  style={{ background: toneFor(b) }}
+                  className="size-3 rounded-full ring-[3px] ring-white shadow-sm"
+                  style={{ background: tone }}
                 />
                 <div
-                  className="absolute size-3 rounded-full animate-ping opacity-30"
-                  style={{ background: toneFor(b), top: 0, left: 0 }}
+                  className="absolute inset-0 size-3 rounded-full animate-ping opacity-30"
+                  style={{ background: tone }}
                 />
               </div>
-              <div className="absolute left-4 top-0 text-[11px] whitespace-nowrap font-medium text-[var(--fg)]">
+              <div className="absolute left-4 -top-0.5 text-[11px] whitespace-nowrap font-semibold text-[var(--fg)] bg-white/80 backdrop-blur px-1.5 py-0.5 rounded">
                 {b.block}
               </div>
             </div>

@@ -33,7 +33,7 @@ export function AdminSidebar({
 }) {
   const path = usePathname();
   return (
-    <nav className={cn("w-60 shrink-0 p-3 space-y-1", className)}>
+    <nav className={cn("w-60 shrink-0 p-3 space-y-0.5", className)}>
       {NAV.map(({ href, label, icon: Icon }) => {
         const active =
           href === "/admin" ? path === "/admin" : path.startsWith(href);
@@ -43,13 +43,18 @@ export function AdminSidebar({
             href={href}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
+              "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all",
               active
-                ? "bg-[var(--primary-50)] text-[var(--primary)] font-medium"
-                : "text-[var(--fg)] hover:bg-[var(--surface-alt)]",
+                ? "text-white font-medium shadow-primary-sm"
+                : "text-[var(--fg-muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-alt)]",
             )}
+            style={
+              active ? { background: "var(--gradient-primary)" } : undefined
+            }
           >
-            <Icon className="size-4 shrink-0" />
+            <Icon
+              className={cn("size-4 shrink-0", active && "stroke-[2.2]")}
+            />
             <span>{label}</span>
           </Link>
         );
