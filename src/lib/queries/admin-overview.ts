@@ -62,7 +62,7 @@ export async function getSchemeCompliance() {
 
 export async function getBlockRiskCounts() {
   // Aggregate by block — simplified for demo
-  const rows = await db.execute(sql`
+  const result = await db.execute(sql`
     select f.block, count(*) filter (where av.risk_level='CRITICAL')::int as critical,
            count(*) filter (where av.risk_level='HIGH')::int as high,
            count(*) filter (where av.risk_level='NORMAL')::int as normal
@@ -74,7 +74,11 @@ export async function getBlockRiskCounts() {
     ) av on true
     group by f.block
   `);
-  return rows as unknown as Array<{
+  // neon-http's db.execute returns a result with `.rows`; older callers may receive an array directly.
+  const rows = Array.isArray(result)
+    ? result
+    : ((result as { rows?: unknown[] }).rows ?? []);
+  return rows as Array<{
     block: string;
     critical: number;
     high: number;
