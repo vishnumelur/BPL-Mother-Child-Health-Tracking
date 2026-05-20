@@ -214,9 +214,20 @@ export function RegisterWizard() {
                 <p className="text-xs text-[var(--fg-muted)]">
                   ABHA-aligned beneficiary ID
                 </p>
-                <p className="font-mono-num text-xl font-medium tracking-wide">
-                  {formatBeneficiaryId(result.motherBeneficiaryId)}
-                </p>
+                <div className="font-mono-num text-2xl font-medium tracking-wider flex justify-center gap-1">
+                  {formatBeneficiaryId(result.motherBeneficiaryId)
+                    .split("")
+                    .map((ch, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: i * 0.05, duration: 0.3 }}
+                      >
+                        {ch}
+                      </motion.span>
+                    ))}
+                </div>
               </div>
               <div className="text-xs text-[var(--fg-muted)] space-y-0.5">
                 <p>
