@@ -48,35 +48,42 @@ export function AncForm({ motherId }: { motherId: number }) {
   if (result) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
         className="p-4 space-y-4"
       >
-        <Card className="p-6 space-y-3 text-center">
-          <RiskBadge level={result.riskLevel} />
-          <h2 className="font-semibold">Visit saved</h2>
-          {result.riskTriggers.length > 0 && (
-            <ul className="text-sm text-[var(--risk-critical)] space-y-0.5">
-              {result.riskTriggers.map((t) => (
-                <li key={t}>• {t}</li>
-              ))}
-            </ul>
-          )}
-          {result.riskLevel === "CRITICAL" && (
-            <p className="text-sm font-medium text-[var(--risk-critical)]">
-              Immediate referral to PHC raised. MO and supervisor notified.
+        <motion.div
+          initial={{ scale: 0.98 }}
+          animate={{ scale: [1, 1.02, 1] }}
+          transition={{ duration: 0.4 }}
+        >
+          <Card className="p-6 space-y-3 text-center">
+            <RiskBadge level={result.riskLevel} />
+            <h2 className="font-semibold">Visit saved</h2>
+            {result.riskTriggers.length > 0 && (
+              <ul className="text-sm text-[var(--risk-critical)] space-y-0.5">
+                {result.riskTriggers.map((t) => (
+                  <li key={t}>• {t}</li>
+                ))}
+              </ul>
+            )}
+            {result.riskLevel === "CRITICAL" && (
+              <p className="text-sm font-medium text-[var(--risk-critical)]">
+                Immediate referral to PHC raised. MO and supervisor notified.
+              </p>
+            )}
+            <p className="text-xs text-[var(--fg-muted)]">
+              Data: {result.kbUsed} KB
             </p>
-          )}
-          <p className="text-xs text-[var(--fg-muted)]">
-            Data: {result.kbUsed} KB
-          </p>
-          <Button
-            onClick={() => router.push(`/field/b/m-${motherId}`)}
-            className="w-full"
-          >
-            Back to mother profile
-          </Button>
-        </Card>
+            <Button
+              onClick={() => router.push(`/field/b/m-${motherId}`)}
+              className="w-full"
+            >
+              Back to mother profile
+            </Button>
+          </Card>
+        </motion.div>
       </motion.div>
     );
   }
