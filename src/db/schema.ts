@@ -346,3 +346,38 @@ export const childrenRelations = relations(children, ({ one, many }) => ({
   immunizations: many(immunizations),
   milestones: many(milestones),
 }));
+
+export const ancVisitsRelations = relations(ancVisits, ({ one }) => ({
+  mother: one(mothers, {
+    fields: [ancVisits.motherId],
+    references: [mothers.id],
+  }),
+}));
+
+export const pncVisitsRelations = relations(pncVisits, ({ one }) => ({
+  mother: one(mothers, {
+    fields: [pncVisits.motherId],
+    references: [mothers.id],
+  }),
+}));
+
+export const growthRecordsRelations = relations(growthRecords, ({ one }) => ({
+  child: one(children, {
+    fields: [growthRecords.childId],
+    references: [children.id],
+  }),
+}));
+
+export const immunizationsRelations = relations(immunizations, ({ one }) => ({
+  child: one(children, {
+    fields: [immunizations.childId],
+    references: [children.id],
+  }),
+}));
+
+export const milestonesRelations = relations(milestones, ({ one }) => ({
+  child: one(children, {
+    fields: [milestones.childId],
+    references: [children.id],
+  }),
+}));
