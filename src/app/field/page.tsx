@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getFieldHomeData } from "@/lib/queries/field-home";
 import { getSession } from "@/lib/session";
 import { BeneficiaryCard } from "@/components/beneficiary-card";
-import { KbBadge } from "@/components/kb-badge";
+import { SyncStatusBadge } from "@/components/sync-status-badge";
 import type { BeneficiarySummary } from "@/components/beneficiary-card";
 import { differenceInWeeks, format } from "date-fns";
 
@@ -51,7 +51,7 @@ export default async function FieldHome() {
           <p className="text-xs text-[var(--fg-muted)]">
             Agali SC · Attappadi
           </p>
-          <KbBadge kb={38} />
+          <SyncStatusBadge />
         </div>
       </header>
 
