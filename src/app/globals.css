@@ -128,3 +128,41 @@
     @apply font-sans;
   }
 }
+
+:root {
+  --primary: #0F4C75;
+  --primary-50: #E8F1F7;
+  --accent: #2D7A3E;
+  --surface: #FAFAF7;
+  --card: #FFFFFF;
+  --fg: #1A1F2C;
+  --fg-muted: #5A6373;
+  --border: #E2E5EA;
+  --risk-normal: #16A34A;
+  --risk-high: #D97706;
+  --risk-critical: #DC2626;
+}
+
+html {
+  background: var(--surface);
+}
+
+body {
+  font-feature-settings: "ss01", "cv11";
+}
+
+.font-malayalam {
+  font-family: var(--font-malayalam), system-ui, sans-serif;
+}
+
+.font-mono-num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
