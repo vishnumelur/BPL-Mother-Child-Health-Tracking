@@ -1,6 +1,5 @@
 // src/db/seed.ts
-import { config } from "dotenv";
-config({ path: ".env.local" });
+import "./load-env";
 import { db } from ".";
 import {
   facilities, fieldWorkers, families, mothers, children, ancVisits,
@@ -78,7 +77,6 @@ async function seedSreelakshmiArc(
   const agaliSC = facList.find((f) => f.name === "Agali Sub-Centre")!;
   const agaliPHC = facList.find((f) => f.name === "Agali PHC")!;
   const mannarkkadCHC = facList.find((f) => f.name === "Mannarkkad CHC")!;
-  void mannarkkadCHC;
 
   // === Protagonist family ===
   const [sreFamily] = await db
@@ -156,6 +154,90 @@ async function seedSreelakshmiArc(
     ],
   });
 
+  // === Baby Anu ===
+  const dobDate = new Date();
+  dobDate.setDate(dobDate.getDate() - 90);
+  const [anu] = await db
+    .insert(children)
+    .values({
+      familyId: sreFamily.id,
+      motherId: sre.id,
+      beneficiaryId12: generateBeneficiaryId12(),
+      name: "Anu R.",
+      dob: dobDate.toISOString().slice(0, 10),
+      birthWeightG: 2400,
+      sex: "F",
+    })
+    .returning();
+
+  // Growth records — last one shows SAM
+  await db.insert(growthRecords).values([
+    {
+      childId: anu.id,
+      recordedAt: new Date(Date.now() - 60 * 86400000),
+      weightKg: 3.6, heightCm: 53, muacCm: 12.4,
+      weightZ: -1.2, weightForHeightZ: -1.4, classification: "NORMAL",
+      recordedByWorkerId: lakshmi.id, kbUsed: 28,
+    },
+    {
+      childId: anu.id,
+      recordedAt: new Date(Date.now() - 30 * 86400000),
+      weightKg: 4.2, heightCm: 58, muacCm: 11.9,
+      weightZ: -1.8, weightForHeightZ: -2.1, classification: "MAM",
+      recordedByWorkerId: lakshmi.id, kbUsed: 28,
+    },
+    {
+      childId: anu.id,
+      recordedAt: new Date(),
+      weightKg: 4.1, heightCm: 60, muacCm: 11.2,
+      weightZ: -2.8, weightForHeightZ: -3.2, classification: "SAM",
+      recordedByWorkerId: lakshmi.id, kbUsed: 28,
+    },
+  ]);
+
+  // NRC referral for SAM
+  await db.insert(referrals).values({
+    subjectType: "child", subjectId: anu.id,
+    fromFacilityId: agaliPHC.id, toFacilityId: mannarkkadCHC.id,
+    tierFrom: "PHC", tierTo: "CHC",
+    reason: "SAM — refer to NRC", status: "PENDING",
+  });
+
+  // Immunizations — past schedule
+  const dobMs = dobDate.getTime();
+  await db.insert(immunizations).values(
+    VACCINES_0_TO_24M.map((v) => {
+      const sched = new Date(dobMs + v.ageMonths * 30 * 86400000);
+      const past = sched.getTime() < Date.now();
+      const upcoming = sched.getTime() > Date.now() + 14 * 86400000;
+      const status: "GIVEN" | "UPCOMING" | "DUE" = past
+        ? "GIVEN"
+        : upcoming
+        ? "UPCOMING"
+        : "DUE";
+      return {
+        childId: anu.id,
+        vaccineCode: v.code,
+        scheduledDate: sched.toISOString().slice(0, 10),
+        givenDate: status === "GIVEN" ? sched.toISOString().slice(0, 10) : null,
+        givenAtFacilityId: status === "GIVEN" ? agaliPHC.id : null,
+        status,
+      };
+    }),
+  );
+
+  // Milestones
+  await db.insert(milestones).values(
+    MILESTONES_0_TO_24M.map((m) => ({
+      childId: anu.id,
+      milestoneCode: m.code,
+      expectedAgeMonths: m.expectedAgeMonths,
+      status: (m.expectedAgeMonths <= 3 ? "ACHIEVED" : "PENDING") as
+        | "ACHIEVED"
+        | "PENDING",
+    })),
+  );
+
   // Schemes
   await db.insert(schemeEnrollments).values([
     { beneficiaryType: "mother", beneficiaryId: sre.id, schemeCode: "PMMVY", installmentNo: 1, expectedDate: "2025-10-01", disbursedDate: "2025-10-05", amount: 1000, status: "DISBURSED" },
@@ -171,14 +253,6 @@ async function seedSreelakshmiArc(
     { beneficiaryType: "mother", beneficiaryId: sre.id, type: "ANC_VISIT", dueDate: today, channel: "APP" },
     { beneficiaryType: "mother", beneficiaryId: sre.id, type: "PNC_FOLLOWUP", dueDate: today, channel: "SMS" },
   ]);
-
-  // Touch unused imports until Task 11.2 introduces baby Anu
-  void children;
-  void growthRecords;
-  void immunizations;
-  void milestones;
-  void VACCINES_0_TO_24M;
-  void MILESTONES_0_TO_24M;
 
   return seedBackgroundCohort(workers, facList, sre.id);
 }
