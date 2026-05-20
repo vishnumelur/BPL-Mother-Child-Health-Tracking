@@ -6,15 +6,8 @@ import {
   DataTableRow,
 } from "@/components/data-table";
 import { KpiCard } from "@/components/kpi-card";
+import { PersonAvatar } from "@/components/person-avatar";
 import { Star } from "lucide-react";
-
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
-  return (
-    (parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")
-  ).toUpperCase();
-}
 
 export default async function AdminAshas() {
   const result = await db.execute(sql`
@@ -142,14 +135,12 @@ export default async function AdminAshas() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <div
-                        className="size-8 rounded-full flex items-center justify-center text-white text-[11px] font-semibold shrink-0 tracking-tight"
-                        style={{
-                          background: "var(--gradient-primary)",
-                        }}
-                      >
-                        {initialsOf(a.name)}
-                      </div>
+                      <PersonAvatar
+                        name={a.name}
+                        seed={`asha-${a.id ?? a.name}`}
+                        kind="woman"
+                        className="size-8 text-[11px] tracking-tight"
+                      />
                       <div className="min-w-0">
                         <div className="text-sm font-medium text-[var(--fg)] truncate flex items-center gap-1.5">
                           {a.name}

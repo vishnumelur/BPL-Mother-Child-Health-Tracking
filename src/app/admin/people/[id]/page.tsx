@@ -9,6 +9,7 @@ import { db } from "@/db";
 import { alerts as alertsTable } from "@/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { RiskBadge } from "@/components/risk-badge";
+import { PersonAvatar } from "@/components/person-avatar";
 import {
   DataTable,
   DataTableHead,
@@ -25,14 +26,6 @@ import {
   AlertTriangle,
   Siren,
 } from "lucide-react";
-
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
-  return (
-    (parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")
-  ).toUpperCase();
-}
 
 export default async function AdminPeopleDetail({
   params,
@@ -61,7 +54,6 @@ export default async function AdminPeopleDetail({
 
     const latestRisk = m.ancVisits[0]?.riskLevel;
     const isCritical = latestRisk === "CRITICAL";
-    const initials = initialsOf(m.name);
 
     return (
       <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
@@ -86,12 +78,12 @@ export default async function AdminPeopleDetail({
         {/* Header */}
         <header className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
           <div className="flex items-start gap-4 min-w-0 flex-1">
-            <div
-              className="size-14 sm:size-16 rounded-2xl flex items-center justify-center text-white text-base sm:text-lg font-semibold shrink-0 shadow-primary-sm tracking-tight"
-              style={{ background: "var(--gradient-primary)" }}
-            >
-              {initials}
-            </div>
+            <PersonAvatar
+              name={m.name}
+              seed={`m-${m.id}`}
+              kind="woman"
+              className="size-14 sm:size-16 rounded-2xl text-base sm:text-lg tracking-tight"
+            />
             <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
@@ -358,7 +350,6 @@ export default async function AdminPeopleDetail({
   // Child branch (kept; minor polish)
   const c = await loadChild(parsed.id);
   if (!c) notFound();
-  const initials = initialsOf(c.name ?? "Baby");
   return (
     <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
       <nav
@@ -380,12 +371,12 @@ export default async function AdminPeopleDetail({
 
       <header className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
         <div className="flex items-start gap-4 min-w-0 flex-1">
-          <div
-            className="size-14 sm:size-16 rounded-2xl flex items-center justify-center text-white text-base sm:text-lg font-semibold shrink-0 shadow-primary-sm tracking-tight"
-            style={{ background: "var(--gradient-primary)" }}
-          >
-            {initials}
-          </div>
+          <PersonAvatar
+            name={c.name ?? "Baby"}
+            seed={`c-${c.id}`}
+            kind="child"
+            className="size-14 sm:size-16 rounded-2xl text-base sm:text-lg tracking-tight"
+          />
           <div className="space-y-1.5 min-w-0">
             <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
               {c.name ?? "Baby " + c.beneficiaryId12.slice(-4)}

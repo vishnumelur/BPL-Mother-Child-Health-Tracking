@@ -6,16 +6,10 @@ import { ChevronRight, Filter } from "lucide-react";
 import { RiskBadge } from "@/components/risk-badge";
 import { DataTable, DataTableHead, DataTableRow } from "@/components/data-table";
 import { formatBeneficiaryId } from "@/lib/beneficiary-id";
+import { PersonAvatar } from "@/components/person-avatar";
 import { cn } from "@/lib/utils";
 
 const BLOCKS = ["Agali", "Sholayur", "Pudur", "Mannarkkad", "Attappadi"];
-
-// Deterministic initials from a name (e.g. "Sreelakshmi M." -> "SM")
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
-  return ((parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")).toUpperCase();
-}
 
 export default async function AdminPeople({
   searchParams,
@@ -149,13 +143,12 @@ export default async function AdminPeople({
                     href={`/admin/people/m-${m.id}`}
                     className="flex items-center gap-3 group min-w-0"
                   >
-                    <div
-                      className="size-9 rounded-full flex items-center justify-center text-[11px] font-semibold text-white shadow-primary-sm shrink-0"
-                      style={{ background: "var(--gradient-primary)" }}
-                      aria-hidden
-                    >
-                      {initialsOf(m.name)}
-                    </div>
+                    <PersonAvatar
+                      name={m.name}
+                      seed={`m-${m.id}`}
+                      kind="woman"
+                      className="size-9 text-[11px]"
+                    />
                     <div className="min-w-0">
                       <div className="font-medium text-[var(--fg)] group-hover:text-[var(--primary)] transition-colors truncate">
                         {m.name}

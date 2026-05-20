@@ -15,7 +15,10 @@ const ITEMS = [
 export function FieldBottomNav() {
   const path = usePathname();
   return (
-    <nav className="absolute bottom-0 left-0 right-0 h-16 bg-[var(--card)] border-t border-[var(--border)] flex pb-[env(safe-area-inset-bottom)]">
+    <nav
+      className="shrink-0 h-16 bg-[var(--card)] border-t border-[var(--border)] flex"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
       {ITEMS.map(({ href, icon: Icon, label, match }) => {
         const active = match(path);
         return (

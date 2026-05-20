@@ -1,6 +1,9 @@
 "use client";
+import Link from "next/link";
 import { Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PortalSwitcher } from "@/components/portal-switcher";
+import { PersonAvatar } from "@/components/person-avatar";
 
 export function AdminTopBar({
   today,
@@ -24,7 +27,12 @@ export function AdminTopBar({
             <Menu className="size-5" />
           </Button>
         )}
-        <div className="flex items-center gap-2.5 min-w-0">
+        <Link
+          href="/"
+          prefetch
+          aria-label="Kerala MCH Tracker — back to landing"
+          className="flex items-center gap-2.5 min-w-0 rounded-xl -mx-1.5 px-1.5 py-1 hover:bg-[var(--surface-alt)] transition-colors active:scale-[0.98]"
+        >
           <div
             className="size-9 rounded-xl flex items-center justify-center shadow-primary-sm shrink-0"
             style={{ background: "var(--gradient-primary)" }}
@@ -41,11 +49,14 @@ export function AdminTopBar({
               Palakkad District
             </span>
           </div>
-        </div>
+        </Link>
       </div>
 
-      {/* Right — search + date + avatar */}
+      {/* Right — switcher (mobile only; desktop hosts it in the sidebar) + search + date + avatar */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="lg:hidden">
+          <PortalSwitcher variant="inline" showEyebrow={false} />
+        </div>
         <button
           type="button"
           className="hidden md:inline-flex items-center gap-2 h-9 px-3 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--surface-alt)] transition-colors text-[var(--fg-muted)]"
@@ -56,16 +67,16 @@ export function AdminTopBar({
             ⌘K
           </kbd>
         </button>
-        <span className="hidden lg:inline text-[var(--fg-muted)] font-mono-num text-xs whitespace-nowrap">
+        <span className="hidden xl:inline text-[var(--fg-muted)] font-mono-num text-xs whitespace-nowrap">
           {today}
         </span>
         <div className="flex items-center gap-2">
-          <div
-            className="size-9 rounded-full flex items-center justify-center text-[11px] font-semibold text-white shadow-primary-sm"
-            style={{ background: "var(--gradient-primary)" }}
-          >
-            S
-          </div>
+          <PersonAvatar
+            name="Dr. Suresh"
+            seed="admin-suresh"
+            kind="man"
+            className="size-9 text-[11px]"
+          />
           <div className="hidden sm:flex flex-col leading-tight">
             <span className="font-medium text-[var(--fg)] text-sm">
               Dr. Suresh

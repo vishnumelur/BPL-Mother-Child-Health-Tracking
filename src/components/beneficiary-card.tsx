@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { RiskBadge } from "./risk-badge";
+import { PersonAvatar } from "./person-avatar";
 import type { RiskLevel } from "@/lib/risk-scoring";
 
 export interface BeneficiarySummary {
@@ -14,36 +15,18 @@ export interface BeneficiarySummary {
 }
 
 export function BeneficiaryCard({ b }: { b: BeneficiarySummary }) {
-  const initials = b.name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
-
   return (
     <Link
       href={`/field/b/${b.type[0]}-${b.id}`}
       className="group block rounded-2xl border border-[var(--border)] bg-white p-4 shadow-card hover:shadow-elevated hover:-translate-y-0.5 hover:border-[var(--primary)]/30 active:scale-[0.99] transition-all"
     >
       <div className="flex items-start gap-3">
-        <div
-          className={
-            "size-11 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 " +
-            (b.riskLevel === "CRITICAL"
-              ? "bg-[var(--risk-critical)]/10 text-[var(--risk-critical)]"
-              : b.riskLevel === "HIGH"
-                ? "bg-[var(--risk-high)]/10 text-[var(--risk-high)]"
-                : "text-white")
-          }
-          style={
-            b.riskLevel === "NORMAL"
-              ? { background: "var(--gradient-primary)" }
-              : undefined
-          }
-        >
-          {initials || "·"}
-        </div>
+        <PersonAvatar
+          name={b.name}
+          seed={`${b.type}-${b.id}`}
+          kind={b.type === "child" ? "child" : "woman"}
+          className="size-11 text-sm"
+        />
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-start justify-between gap-2">
             <div className="font-semibold text-[var(--fg)] truncate">

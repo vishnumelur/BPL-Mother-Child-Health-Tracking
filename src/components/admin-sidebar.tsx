@@ -12,6 +12,8 @@ import {
   Plug,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PortalSwitcher } from "@/components/portal-switcher";
+import { PersonAvatar } from "@/components/person-avatar";
 
 const NAV = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
@@ -62,9 +64,35 @@ export function AdminSidebar({
         })}
       </div>
 
-      {/* Live status chip pinned to bottom */}
-      <div className="mt-3 px-1">
-        <div className="rounded-xl bg-[var(--primary-50)] border border-[var(--primary)]/15 px-3 py-2.5 flex items-center gap-2">
+      {/* Account / portal-switcher card — login-style identity widget pinned to bottom */}
+      <div className="mt-3 space-y-2">
+        <div className="rounded-2xl border border-[var(--border)] bg-white shadow-card p-3 space-y-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <PersonAvatar
+              name="Dr. Suresh"
+              seed="admin-suresh"
+              kind="man"
+              className="size-9 text-[11px]"
+            />
+            <div className="flex flex-col leading-tight min-w-0">
+              <span className="text-sm font-semibold text-[var(--fg)] truncate">
+                Dr. Suresh
+              </span>
+              <span className="text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">
+                Admin · Palakkad
+              </span>
+            </div>
+          </div>
+          <div className="space-y-1">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--fg-subtle)] pl-0.5">
+              Switch view
+            </span>
+            <PortalSwitcher variant="inline" showEyebrow={false} fullWidth />
+          </div>
+        </div>
+
+        {/* Live status chip — slimmer, secondary */}
+        <div className="rounded-xl bg-[var(--primary-50)] border border-[var(--primary)]/15 px-3 py-2 flex items-center gap-2">
           <span className="relative flex size-2 shrink-0">
             <span className="absolute inset-0 size-2 rounded-full bg-[var(--primary)] animate-ping opacity-60" />
             <span className="relative size-2 rounded-full bg-[var(--primary)]" />

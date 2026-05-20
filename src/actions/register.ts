@@ -59,7 +59,7 @@ export async function registerBeneficiary(input: RegisterInput) {
       beneficiaryId12: motherBeneficiaryId,
       name: data.motherName,
       age: data.motherAge,
-      lmp: data.lmp ?? null,
+      lmp: data.lmp || null,
       edd,
       pregnancyNo: data.pregnancyNo,
     })

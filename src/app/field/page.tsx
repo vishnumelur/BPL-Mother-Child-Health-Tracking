@@ -3,6 +3,7 @@ import { Siren, Sparkles, ListChecks } from "lucide-react";
 import { getFieldHomeData } from "@/lib/queries/field-home";
 import { getSession } from "@/lib/session";
 import { BeneficiaryCard } from "@/components/beneficiary-card";
+import { PersonAvatar } from "@/components/person-avatar";
 import { SyncStatusBadge } from "@/components/sync-status-badge";
 import type { BeneficiarySummary } from "@/components/beneficiary-card";
 import { differenceInWeeks, format } from "date-fns";
@@ -52,16 +53,24 @@ export default async function FieldHome() {
       <div className="relative px-4 py-6 sm:px-5 sm:py-7 space-y-6">
         {/* Greeting header */}
         <header className="flex items-start justify-between gap-3">
-          <div className="space-y-1 min-w-0">
-            <p className="font-malayalam text-sm text-[var(--primary)] font-medium">
-              നമസ്കാരം
-            </p>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight leading-tight">
-              Lakshmi K.
-            </h1>
-            <p className="text-xs text-[var(--fg-muted)]">
-              ASHA · Agali Sub-Centre · Attappadi
-            </p>
+          <div className="flex items-start gap-3 min-w-0 flex-1">
+            <PersonAvatar
+              name="Lakshmi K."
+              seed="asha-lakshmi"
+              kind="woman"
+              className="size-12 rounded-2xl text-sm"
+            />
+            <div className="space-y-1 min-w-0">
+              <p className="font-malayalam text-sm text-[var(--primary)] font-medium">
+                നമസ്കാരം
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight leading-tight">
+                Lakshmi K.
+              </h1>
+              <p className="text-xs text-[var(--fg-muted)]">
+                ASHA · Agali Sub-Centre · Attappadi
+              </p>
+            </div>
           </div>
           <SyncStatusBadge />
         </header>

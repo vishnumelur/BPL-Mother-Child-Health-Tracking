@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { AdminSidebar } from "./admin-sidebar";
 import { AdminTopBar } from "./admin-top-bar";
@@ -15,10 +16,10 @@ export function AdminShell({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--surface)]">
+    <div className="h-[100dvh] flex flex-col bg-[var(--surface)] overflow-hidden">
       <AdminTopBar today={today} onMenuClick={() => setOpen(true)} />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Desktop sidebar */}
         <aside className="hidden lg:flex border-r border-[var(--border)] bg-[var(--surface)]">
           <AdminSidebar />
@@ -29,9 +30,14 @@ export function AdminShell({
           <SheetContent side="left" className="p-0 w-[260px] flex flex-col">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <div className="h-14 border-b border-[var(--border)] flex items-center px-4 shrink-0">
-              <span className="text-sm font-semibold text-[var(--primary)]">
+              <Link
+                href="/"
+                prefetch
+                onClick={() => setOpen(false)}
+                className="text-sm font-semibold text-[var(--primary)] hover:opacity-80 transition-opacity"
+              >
                 Kerala MCH Tracker
-              </span>
+              </Link>
             </div>
             <div className="flex-1 min-h-0">
               <AdminSidebar onNavigate={() => setOpen(false)} />

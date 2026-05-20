@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
-import { Check, Sparkles, UserPlus } from "lucide-react";
+import { ArrowRight, Check, HeartPulse, Plus, UserPlus } from "lucide-react";
 import { registerBeneficiary } from "@/actions/register";
 import { formatBeneficiaryId } from "@/lib/beneficiary-id";
 import { BLOCKS, VILLAGES_BY_BLOCK } from "@/data/kerala-places";
@@ -64,7 +64,7 @@ export function RegisterWizard() {
 
   return (
     <div className="px-4 py-5 sm:px-5 sm:py-6 space-y-5">
-      {step !== "success" && (
+      {step !== "success" ? (
         <header className="space-y-2">
           <div className="flex items-center gap-2.5">
             <div className="size-10 rounded-2xl bg-[var(--primary-50)] flex items-center justify-center shadow-primary-sm">
@@ -92,6 +92,15 @@ export function RegisterWizard() {
             ))}
           </div>
         </header>
+      ) : (
+        <div className="flex justify-center items-center gap-3 pt-1 pb-1">
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div
+              key={i}
+              className="w-2.5 h-2.5 rounded-full bg-gradient-primary shadow-primary-sm"
+            />
+          ))}
+        </div>
       )}
 
       <AnimatePresence mode="wait">
@@ -260,73 +269,123 @@ export function RegisterWizard() {
         {step === "success" && result && (
           <motion.div
             key="success"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
             className="space-y-5"
           >
-            <section className="relative rounded-3xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-7 shadow-card overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-soft opacity-60 pointer-events-none" />
-              <div className="relative flex flex-col items-center text-center space-y-4">
-                <div className="relative">
-                  <div className="absolute inset-0 rounded-full bg-[var(--primary)]/25 blur-2xl scale-150" />
-                  <motion.div
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 220,
-                      damping: 16,
-                    }}
-                    className="relative size-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-primary-sm"
-                  >
+            <motion.section
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative rounded-3xl border border-[var(--border)] bg-[var(--card)] p-7 sm:p-8 shadow-elevated overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-soft opacity-70 pointer-events-none" />
+              <div className="relative flex flex-col items-center text-center">
+                {/* Pulsing halo + check */}
+                <div className="mb-6 flex justify-center">
+                  <div className="size-20 rounded-full bg-[var(--primary-50)] flex items-center justify-center glow-pulse">
                     <Check
-                      className="size-8 text-white"
+                      className="size-10 text-[var(--primary)]"
                       strokeWidth={2.5}
                     />
-                  </motion.div>
+                  </div>
                 </div>
-                <div className="space-y-1.5">
-                  <h2 className="text-xl font-semibold text-[var(--fg)] tracking-tight">
-                    Beneficiary registered
+
+                {/* Eyebrow + shimmer ID */}
+                <div className="mb-6 space-y-1.5">
+                  <p className="text-[10px] font-bold tracking-[0.2em] text-[var(--fg-subtle)]">
+                    ABHA-ALIGNED ID
+                  </p>
+                  <h2 className="font-mono-num text-3xl sm:text-[2rem] font-semibold tracking-tight shimmer-text">
+                    {formatBeneficiaryId(result.motherBeneficiaryId)}
                   </h2>
-                  <p className="text-xs text-[var(--fg-muted)]">
-                    ABHA-aligned beneficiary ID
+                </div>
+
+                {/* Headline + subtitle */}
+                <div className="mb-7 space-y-1.5">
+                  <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-[var(--fg)]">
+                    Beneficiary registered
+                  </h3>
+                  <p className="text-sm text-[var(--fg-muted)]">
+                    Mother profile created for{" "}
+                    <span className="font-medium text-[var(--fg)]">
+                      {form.motherName}
+                    </span>
                   </p>
                 </div>
-                <div className="font-mono-num text-2xl sm:text-3xl font-semibold tracking-[0.12em] text-[var(--fg)] flex justify-center">
-                  {formatBeneficiaryId(result.motherBeneficiaryId)
-                    .split("")
-                    .map((ch, i) => (
-                      <motion.span
-                        key={i}
-                        initial={{ y: -16, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: i * 0.05, duration: 0.3 }}
-                      >
-                        {ch}
-                      </motion.span>
-                    ))}
+
+                {/* Metadata pills */}
+                <div className="mb-7 flex flex-wrap items-center justify-center gap-2">
+                  <span className="rounded-full bg-[var(--primary-50)] text-[var(--primary)] px-3.5 py-1.5 text-xs font-semibold tracking-tight">
+                    BPL Priority Tier {result.bplTier}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-alt)] border border-[var(--border)] text-[var(--fg-muted)] px-3.5 py-1.5 text-xs font-medium tracking-tight">
+                    <Check className="size-3 text-[var(--primary)]" strokeWidth={3} />
+                    <span className="font-mono-num">Data used: {result.kbUsed} KB</span>
+                  </span>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--primary-50)] text-[var(--primary)] px-2.5 py-1 text-[11px] font-medium tracking-tight">
-                    <Sparkles className="size-3" />
-                    BPL Tier {result.bplTier}
-                  </span>
-                  <span className="inline-flex items-center rounded-full bg-[var(--surface-alt)] text-[var(--fg-muted)] px-2.5 py-1 text-[11px] font-medium tracking-tight font-mono-num">
-                    {result.kbUsed} KB used
-                  </span>
+
+                {/* CTAs */}
+                <div className="w-full flex flex-col gap-3">
+                  <Button
+                    onClick={() => router.push(`/field/b/m-${result.motherId}`)}
+                    className="w-full h-14 rounded-full bg-gradient-primary text-white font-semibold shadow-primary hover:opacity-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                  >
+                    Open mother profile
+                    <ArrowRight className="size-4" />
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setResult(null);
+                      setOtp("");
+                      setForm({
+                        headOfFamily: "",
+                        village: "",
+                        block: "",
+                        bplScore: 12,
+                        motherName: "",
+                        motherAge: 24,
+                        lmp: "",
+                        pregnancyNo: 1,
+                        childDob: "",
+                        childSex: "F",
+                      });
+                      setStep("family");
+                    }}
+                    className="w-full py-2 text-sm font-semibold text-[var(--primary)] hover:text-[var(--primary-hover)] active:scale-95 transition-all flex items-center justify-center gap-1"
+                  >
+                    <Plus className="size-3.5" strokeWidth={2.5} />
+                    Register another beneficiary
+                  </button>
                 </div>
               </div>
-            </section>
-            <Button
-              onClick={() =>
-                router.push(`/field/b/m-${result.motherId}`)
-              }
-              className="w-full h-12 rounded-2xl bg-gradient-primary text-white font-medium shadow-primary-sm hover:opacity-95"
+            </motion.section>
+
+            {/* Next-step bento */}
+            <motion.button
+              type="button"
+              onClick={() => router.push(`/field/b/m-${result.motherId}`)}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full text-left p-5 rounded-2xl bg-[var(--surface-alt)] border border-[var(--border)] flex items-start gap-4 active:scale-[0.99] transition-transform"
             >
-              Open mother profile
-            </Button>
+              <div className="p-2.5 rounded-xl bg-[var(--card)] shadow-card ring-1 ring-[var(--primary)]/10 shrink-0">
+                <HeartPulse className="size-5 text-[var(--primary)]" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="font-semibold text-sm text-[var(--fg)] tracking-tight">
+                  Next step: schedule first ANC
+                </h4>
+                <p className="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">
+                  Book the first prenatal checkup and tetanus toxoid vaccination
+                  within 7 days of registration.
+                </p>
+              </div>
+              <ArrowRight className="size-4 text-[var(--fg-subtle)] mt-2 shrink-0" />
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
