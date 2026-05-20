@@ -20,24 +20,26 @@ export function AdminShell({
 
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:block border-r border-[var(--border)] bg-[var(--surface)]">
+        <aside className="hidden lg:flex border-r border-[var(--border)] bg-[var(--surface)]">
           <AdminSidebar />
         </aside>
 
         {/* Mobile drawer */}
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetContent side="left" className="p-0 w-[260px]">
+          <SheetContent side="left" className="p-0 w-[260px] flex flex-col">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <div className="h-14 border-b border-[var(--border)] flex items-center px-4">
+            <div className="h-14 border-b border-[var(--border)] flex items-center px-4 shrink-0">
               <span className="text-sm font-semibold text-[var(--primary)]">
                 Kerala MCH Tracker
               </span>
             </div>
-            <AdminSidebar onNavigate={() => setOpen(false)} />
+            <div className="flex-1 min-h-0">
+              <AdminSidebar onNavigate={() => setOpen(false)} />
+            </div>
           </SheetContent>
         </Sheet>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[var(--surface)]">
           {children}
         </main>
       </div>

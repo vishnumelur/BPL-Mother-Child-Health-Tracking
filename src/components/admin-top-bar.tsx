@@ -10,7 +10,8 @@ export function AdminTopBar({
   onMenuClick?: () => void;
 }) {
   return (
-    <header className="h-16 border-b border-[var(--border)] bg-white/80 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 shrink-0 sticky top-0 z-30">
+    <header className="h-16 border-b border-[var(--border)] bg-white/85 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 shrink-0 sticky top-0 z-30">
+      {/* Left — menu (mobile) + brand */}
       <div className="flex items-center gap-2 min-w-0">
         {onMenuClick && (
           <Button
@@ -23,9 +24,9 @@ export function AdminTopBar({
             <Menu className="size-5" />
           </Button>
         )}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className="size-8 rounded-xl flex items-center justify-center shadow-primary-sm"
+            className="size-9 rounded-xl flex items-center justify-center shadow-primary-sm shrink-0"
             style={{ background: "var(--gradient-primary)" }}
           >
             <span className="text-[10px] font-bold text-white tracking-tighter">
@@ -42,31 +43,37 @@ export function AdminTopBar({
           </div>
         </div>
       </div>
+
+      {/* Right — search + date + avatar */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="hidden md:inline-flex h-9 px-3 text-[var(--fg-muted)] hover:bg-[var(--surface-alt)]"
+        <button
+          type="button"
+          className="hidden md:inline-flex items-center gap-2 h-9 px-3 rounded-full border border-[var(--border)] bg-white hover:bg-[var(--surface-alt)] transition-colors text-[var(--fg-muted)]"
         >
-          <Search className="size-4" />
-          <span className="text-xs">Search</span>
+          <Search className="size-3.5" />
+          <span className="text-xs">Search beneficiaries…</span>
           <kbd className="hidden lg:inline px-1.5 py-0.5 rounded border border-[var(--border)] text-[10px] font-mono-num bg-white text-[var(--fg-subtle)]">
             ⌘K
           </kbd>
-        </Button>
-        <span className="hidden md:inline text-[var(--fg-muted)] font-mono-num text-xs">
+        </button>
+        <span className="hidden lg:inline text-[var(--fg-muted)] font-mono-num text-xs whitespace-nowrap">
           {today}
         </span>
         <div className="flex items-center gap-2">
           <div
-            className="size-8 rounded-full flex items-center justify-center text-[10px] font-semibold text-white shadow-primary-sm"
+            className="size-9 rounded-full flex items-center justify-center text-[11px] font-semibold text-white shadow-primary-sm"
             style={{ background: "var(--gradient-primary)" }}
           >
             S
           </div>
-          <span className="hidden sm:inline font-medium text-[var(--fg)] text-sm">
-            Dr. Suresh
-          </span>
+          <div className="hidden sm:flex flex-col leading-tight">
+            <span className="font-medium text-[var(--fg)] text-sm">
+              Dr. Suresh
+            </span>
+            <span className="text-[10px] text-[var(--fg-muted)] uppercase tracking-wider">
+              Admin
+            </span>
+          </div>
         </div>
       </div>
     </header>

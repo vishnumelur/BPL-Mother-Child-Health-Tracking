@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, TrendingUp } from "lucide-react";
 import { KpiCard } from "@/components/kpi-card";
 import { PalakkadMap } from "@/components/palakkad-map";
 import { LiveAlertsPanel } from "@/components/live-alerts-panel";
@@ -20,10 +20,14 @@ export default async function AdminOverview() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+      {/* Header */}
       <header className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--primary-50)] text-[11px] font-medium text-[var(--primary)]">
-            <span className="size-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--primary-50)] text-[11px] font-semibold text-[var(--primary)]">
+            <span className="relative flex size-1.5">
+              <span className="absolute inset-0 size-1.5 rounded-full bg-[var(--primary)] animate-ping opacity-70" />
+              <span className="relative size-1.5 rounded-full bg-[var(--primary)]" />
+            </span>
             Live
           </div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
@@ -33,16 +37,22 @@ export default async function AdminOverview() {
             Palakkad District · auto-refreshes every 8 seconds
           </p>
         </div>
-        <div className="inline-flex items-center gap-1.5 text-[11px] text-[var(--fg-muted)]">
+        <div className="inline-flex items-center gap-1.5 text-[11px] text-[var(--fg-muted)] rounded-full border border-[var(--border)] bg-white px-3 py-1.5 shadow-card">
           <Sparkles className="size-3 text-[var(--primary)]" />
-          <span>61 mothers tracked in pilot</span>
+          <span>{kpis.mothersTracked} mothers tracked in pilot</span>
         </div>
       </header>
 
-      {/* KPI grid — one primary, rest default */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      {/* KPI grid — first card is primary gradient; rest are default */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <KpiCard label="Mothers tracked" value={kpis.mothersTracked} variant="primary" />
-        <KpiCard label="High-risk pregnancies" value={kpis.highRiskPregnancies} />
+        <div className="relative">
+          <KpiCard label="High-risk pregnancies" value={kpis.highRiskPregnancies} />
+          <span className="absolute top-3.5 right-3.5 inline-flex items-center gap-0.5 text-[10px] font-mono-num font-semibold text-[var(--primary)] bg-[var(--primary-50)] px-1.5 py-0.5 rounded-full">
+            <TrendingUp className="size-2.5" />
+            +4%
+          </span>
+        </div>
         <KpiCard
           label="Active SOS today"
           value={kpis.activeSosToday}
@@ -75,7 +85,7 @@ export default async function AdminOverview() {
       </div>
 
       {/* Compliance */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1">
         <SchemeComplianceChart data={schemes} />
       </div>
     </div>
