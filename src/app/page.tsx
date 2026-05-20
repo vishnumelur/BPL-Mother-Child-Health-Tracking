@@ -18,9 +18,9 @@ export default function Home() {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 lg:py-28 space-y-12 sm:space-y-16">
         {/* Hero */}
         <section className="space-y-6 sm:space-y-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur border border-[var(--border)] text-[11px] font-medium text-[var(--fg-muted)]">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur border border-[var(--border)] text-[11px] font-medium text-[var(--fg-muted)] shadow-card">
             <Sparkles className="size-3 text-[var(--primary)]" strokeWidth={2.4} />
-            <span>Demonstration · National Health Mission</span>
+            <span>Demonstration · NHM</span>
           </div>
 
           <div className="space-y-5 max-w-3xl">
