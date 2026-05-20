@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Noto_Sans_Malayalam } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { NarratorPanel } from "@/components/narrator-panel";
 import "./globals.css";
 
 const notoMalayalam = Noto_Sans_Malayalam({
@@ -27,6 +28,7 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-[var(--surface)] text-[var(--fg)]">
         {children}
+        <NarratorPanel />
         <Toaster richColors closeButton />
       </body>
     </html>
