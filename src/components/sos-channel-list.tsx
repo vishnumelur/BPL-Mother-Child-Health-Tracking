@@ -14,6 +14,12 @@ const LABELS: Record<string, string> = {
   supervisor: "Block Supervisor",
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  field_worker: "Transmission active",
+  "102_ambulance": "Nearest unit · 4.2 km",
+  supervisor: "Real-time monitoring",
+};
+
 export function SosChannelList({
   channels,
 }: {
@@ -30,21 +36,24 @@ export function SosChannelList({
               key={c.to}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.2, duration: 0.3 }}
-              className="flex items-center justify-between p-3.5 rounded-xl border border-[var(--border)] bg-[var(--card)]"
+              transition={{ delay: i * 0.1, duration: 0.3 }}
+              className="flex items-center gap-3 p-3.5 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-card"
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="size-8 rounded-lg bg-[var(--primary-50)] flex items-center justify-center shrink-0">
-                  <Icon className="size-4 text-[var(--primary)]" />
-                </div>
-                <span className="text-sm font-medium text-[var(--fg)] truncate">
+              <div className="size-10 rounded-xl bg-[var(--primary-50)] flex items-center justify-center shrink-0">
+                <Icon className="size-5 text-[var(--primary)]" strokeWidth={2.2} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-semibold text-[var(--fg)] truncate">
                   {LABELS[c.to] ?? c.to}
-                </span>
+                </div>
+                <div className="text-[11px] text-[var(--fg-muted)] truncate">
+                  {STATUS_LABELS[c.to] ?? c.status}
+                </div>
               </div>
               {done ? (
-                <span className="flex items-center gap-1 text-xs text-[var(--primary)] font-medium shrink-0">
-                  <Check className="size-3.5" strokeWidth={2.5} />
-                  {c.status}
+                <span className="flex items-center gap-1 text-[11px] text-[var(--primary)] font-medium shrink-0 bg-[var(--primary-50)] px-2 py-1 rounded-full">
+                  <Check className="size-3" strokeWidth={2.6} />
+                  <span className="capitalize">{c.status}</span>
                 </span>
               ) : (
                 <Loader2 className="size-4 animate-spin text-[var(--fg-muted)] shrink-0" />
