@@ -9,6 +9,7 @@ import { ml } from "@/lib/malayalam";
 import { saveGrowthRecord } from "@/actions/growth";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { enqueue } from "@/lib/offline-queue";
 
 export function GrowthForm({ childId }: { childId: number }) {
   const router = useRouter();
@@ -17,6 +18,14 @@ export function GrowthForm({ childId }: { childId: number }) {
   const [f, setF] = useState({ weightKg: 7.5, heightCm: 67, muacCm: 13.5 });
 
   function submit() {
+    const cookie = typeof document !== "undefined"
+      ? document.cookie.includes("mch_offline=1")
+      : false;
+    if (cookie || (typeof navigator !== "undefined" && !navigator.onLine)) {
+      const item = enqueue("saveGrowthRecord", { ...f, childId });
+      toast.info(`Queued offline · ${item.payloadKb} KB`);
+      return;
+    }
     start(async () => {
       const r = await saveGrowthRecord({ ...f, childId });
       setResult(r);

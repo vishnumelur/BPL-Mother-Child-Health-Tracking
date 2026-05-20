@@ -10,6 +10,7 @@ import { motion } from "motion/react";
 import { saveAncVisit } from "@/actions/anc";
 import { RiskBadge } from "@/components/risk-badge";
 import { toast } from "sonner";
+import { enqueue } from "@/lib/offline-queue";
 
 export function AncForm({ motherId }: { motherId: number }) {
   const router = useRouter();
@@ -25,6 +26,14 @@ export function AncForm({ motherId }: { motherId: number }) {
   });
 
   function submit() {
+    const cookie = typeof document !== "undefined"
+      ? document.cookie.includes("mch_offline=1")
+      : false;
+    if (cookie || (typeof navigator !== "undefined" && !navigator.onLine)) {
+      const item = enqueue("saveAncVisit", { ...form, motherId });
+      toast.info(`Queued offline · ${item.payloadKb} KB`);
+      return;
+    }
     startTransition(async () => {
       try {
         const r = await saveAncVisit({ ...form, motherId });

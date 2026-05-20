@@ -8,6 +8,7 @@ import { MalayalamLabel } from "@/components/malayalam-label";
 import { ml } from "@/lib/malayalam";
 import { savePncVisit } from "@/actions/pnc";
 import { toast } from "sonner";
+import { enqueue } from "@/lib/offline-queue";
 
 export function PncForm({ motherId }: { motherId: number }) {
   const router = useRouter();
@@ -21,6 +22,14 @@ export function PncForm({ motherId }: { motherId: number }) {
   });
 
   function submit() {
+    const cookie = typeof document !== "undefined"
+      ? document.cookie.includes("mch_offline=1")
+      : false;
+    if (cookie || (typeof navigator !== "undefined" && !navigator.onLine)) {
+      const item = enqueue("savePncVisit", { ...f, motherId });
+      toast.info(`Queued offline · ${item.payloadKb} KB`);
+      return;
+    }
     start(async () => {
       const r = await savePncVisit({ ...f, motherId });
       toast.success(`PNC saved · ${r.kbUsed} KB`);
