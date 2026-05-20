@@ -12,6 +12,9 @@ import {
   loadMother,
   loadChild,
 } from "@/lib/queries/beneficiary";
+import { GrowthChart } from "@/components/growth-chart";
+import { MilestoneStrip } from "@/components/milestone-strip";
+import { ImmunizationStrip } from "@/components/immunization-strip";
 
 export default async function BeneficiaryPage({
   params,
@@ -151,7 +154,18 @@ export default async function BeneficiaryPage({
           <Button variant="outline" className="w-full">Immunisations</Button>
         </Link>
       </div>
-      {/* growth + milestones rendered in subsequent phases */}
+      <section>
+        <h2 className="text-sm font-semibold mb-2">Growth</h2>
+        <GrowthChart records={c.growthRecords.map((g) => ({ recordedAt: g.recordedAt, weightKg: g.weightKg }))} />
+      </section>
+      <section>
+        <h2 className="text-sm font-semibold mb-2">Immunisations</h2>
+        <ImmunizationStrip immunizations={c.immunizations.map((i) => ({ vaccineCode: i.vaccineCode, status: i.status }))} />
+      </section>
+      <section>
+        <h2 className="text-sm font-semibold mb-2">Milestones</h2>
+        <MilestoneStrip milestones={c.milestones.map((m) => ({ milestoneCode: m.milestoneCode, expectedAgeMonths: m.expectedAgeMonths, status: m.status }))} />
+      </section>
     </div>
   );
 }
