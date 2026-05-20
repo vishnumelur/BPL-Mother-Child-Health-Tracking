@@ -287,35 +287,49 @@ export default async function BeneficiaryPage({
     );
   }
 
-  // Child branch (kept structurally similar; minor polish only)
+  // Child branch
   const c = await loadChild(parsed.id);
   if (!c) notFound();
   const lastGrowth = c.growthRecords[0];
+  const ageMonths = Math.max(
+    0,
+    Math.round(
+      (Date.now() - new Date(c.dob).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
+    ),
+  );
+  const isCritical =
+    lastGrowth?.classification === "SAM" ||
+    lastGrowth?.classification === "MAM";
   return (
     <div className="relative">
       <div
-        className="absolute top-0 left-0 right-0 h-48 pointer-events-none"
+        className="absolute top-0 left-0 right-0 h-56 pointer-events-none"
         style={{ background: "var(--gradient-soft)" }}
         aria-hidden
       />
       <div className="relative px-4 py-6 sm:px-5 sm:py-7 space-y-5">
-        <header className="space-y-1.5">
-          <h1 className="text-2xl font-semibold text-[var(--fg)] tracking-tight">
-            {c.name ?? "Baby " + c.beneficiaryId12.slice(-4)}
-          </h1>
-          <p className="text-[11px] text-[var(--fg-muted)] font-mono-num">
-            {formatBeneficiaryId(c.beneficiaryId12)}
-          </p>
-          <p className="text-xs text-[var(--fg-muted)]">
-            Child · DOB {format(new Date(c.dob), "d MMM yyyy")} ·{" "}
-            {c.family.village}
-          </p>
-          {lastGrowth && (
-            <span className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[var(--risk-critical)]/10 text-[var(--risk-critical)]">
-              {lastGrowth.classification}
-            </span>
-          )}
+        <header className="space-y-2.5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1 min-w-0">
+              <h1 className="text-2xl font-semibold text-[var(--fg)] tracking-tight">
+                {c.name ?? "Baby " + c.beneficiaryId12.slice(-4)}
+              </h1>
+              <p className="text-[11px] font-mono-num text-[var(--fg-muted)]">
+                {formatBeneficiaryId(c.beneficiaryId12)}
+              </p>
+              <p className="text-xs text-[var(--fg-muted)]">
+                Child · {ageMonths}m · DOB{" "}
+                {format(new Date(c.dob), "d MMM yyyy")} · {c.family.village}
+              </p>
+            </div>
+            {lastGrowth && isCritical && (
+              <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--risk-critical)]/10 text-[var(--risk-critical)] ring-1 ring-[var(--risk-critical)]/20">
+                {lastGrowth.classification}
+              </span>
+            )}
+          </div>
         </header>
+
         <div className="grid grid-cols-2 gap-2.5">
           <Link
             href={`/field/b/c-${c.id}/growth/new`}
@@ -332,8 +346,26 @@ export default async function BeneficiaryPage({
             Immunisations
           </Link>
         </div>
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold text-[var(--fg)]">Growth</h2>
+
+        <section className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-card space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <h2 className="text-sm font-semibold text-[var(--fg)]">
+                Growth curve
+              </h2>
+              <p className="text-[11px] text-[var(--fg-muted)]">
+                Weight trend ·{" "}
+                {lastGrowth
+                  ? `last ${format(new Date(lastGrowth.recordedAt), "d MMM")}`
+                  : "no records"}
+              </p>
+            </div>
+            {lastGrowth && (
+              <span className="text-[11px] font-mono-num font-semibold text-[var(--fg)]">
+                {lastGrowth.weightKg} kg
+              </span>
+            )}
+          </div>
           <GrowthChart
             records={c.growthRecords.map((g) => ({
               recordedAt: g.recordedAt,
@@ -341,10 +373,16 @@ export default async function BeneficiaryPage({
             }))}
           />
         </section>
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold text-[var(--fg)]">
-            Immunisations
-          </h2>
+
+        <section className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-card space-y-3">
+          <div className="space-y-0.5">
+            <h2 className="text-sm font-semibold text-[var(--fg)]">
+              Immunisations
+            </h2>
+            <p className="text-[11px] text-[var(--fg-muted)]">
+              Scheduled vs given per UIP
+            </p>
+          </div>
           <ImmunizationStrip
             immunizations={c.immunizations.map((i) => ({
               vaccineCode: i.vaccineCode,
@@ -352,8 +390,16 @@ export default async function BeneficiaryPage({
             }))}
           />
         </section>
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold text-[var(--fg)]">Milestones</h2>
+
+        <section className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-card space-y-3">
+          <div className="space-y-0.5">
+            <h2 className="text-sm font-semibold text-[var(--fg)]">
+              Milestones
+            </h2>
+            <p className="text-[11px] text-[var(--fg-muted)]">
+              Developmental flags by expected age
+            </p>
+          </div>
           <MilestoneStrip
             milestones={c.milestones.map((mi) => ({
               milestoneCode: mi.milestoneCode,
