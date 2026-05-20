@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kerala MCH Tracker — EOI Demo
 
-## Getting Started
+BPL Mother & Child Health Tracking demonstration for state health admin EOI evaluation.
 
-First, run the development server:
+**This is a demo, not the production system.** See `docs/superpowers/specs/2026-05-20-bpl-mch-demo-design.md` for the full design rationale.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env.local
+# Edit .env.local — paste your Neon DATABASE_URL
+pnpm db:push
+pnpm db:seed
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Surfaces
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/field` — ASHA mobile (phone-framed on desktop)
+- `/admin` — district dashboard
+- `/demo` — narrator controls (`Ctrl+Shift+D` on any page)
 
-## Learn More
+## Demo flow
 
-To learn more about Next.js, take a look at the following resources:
+Open two browser tabs:
+- Tab 1: `/field`
+- Tab 2: `/admin`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Run through the Sreelakshmi narrative arc (see spec §4 for the script).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## T-30 min smoke checklist
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `e2e/smoke-checklist.md`.
