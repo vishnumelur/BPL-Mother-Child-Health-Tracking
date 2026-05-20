@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { reminders, mothers, children } from "@/db/schema";
 import { eq, lte } from "drizzle-orm";
 import { ReminderRow, type ReminderRowData } from "@/components/reminder-row";
+import { Bell } from "lucide-react";
 
 export default async function RemindersPage() {
   const today = new Date().toISOString().slice(0, 10);
@@ -36,9 +37,9 @@ export default async function RemindersPage() {
   );
 
   return (
-    <div className="px-4 py-5 sm:px-5 sm:py-6 space-y-5">
+    <div className="px-4 py-6 sm:px-5 sm:py-7 space-y-5">
       <header className="space-y-1">
-        <h1 className="text-xl font-semibold text-[var(--fg)] tracking-tight">
+        <h1 className="text-2xl font-semibold text-[var(--fg)] tracking-tight">
           Reminders
         </h1>
         <p className="text-xs text-[var(--fg-muted)]">
@@ -46,7 +47,10 @@ export default async function RemindersPage() {
         </p>
       </header>
       {enriched.length === 0 ? (
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-alt)] p-8 text-center">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-alt)] p-10 text-center space-y-3">
+          <div className="size-12 mx-auto rounded-2xl bg-[var(--primary-50)] flex items-center justify-center">
+            <Bell className="size-5 text-[var(--primary)]" strokeWidth={2.2} />
+          </div>
           <p className="text-sm text-[var(--fg-muted)]">No reminders due.</p>
         </div>
       ) : (
