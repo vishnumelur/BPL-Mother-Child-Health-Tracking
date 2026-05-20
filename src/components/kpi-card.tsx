@@ -1,5 +1,4 @@
 "use client";
-import { Card } from "@/components/ui/card";
 import { motion, useMotionValue, useTransform, animate } from "motion/react";
 import { useEffect, useState } from "react";
 
@@ -33,23 +32,29 @@ export function KpiCard({
   }, [numeric, mv, rounded, value]);
 
   return (
-    <Card className="p-4 space-y-1">
-      <div className="text-xs text-[var(--fg-muted)] uppercase tracking-wide">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 sm:p-5 space-y-2 transition-shadow hover:shadow-sm">
+      <div className="text-[11px] sm:text-xs text-[var(--fg-muted)] uppercase tracking-[0.08em] font-medium">
         {label}
       </div>
       <motion.div
         key={String(value)}
         initial={{ scale: 1 }}
-        animate={{ scale: [1, 1.05, 1] }}
+        animate={{ scale: [1, 1.03, 1] }}
         transition={{ duration: 0.4 }}
         className={
-          "text-3xl font-semibold font-mono-num " +
-          (tone === "alert" ? "text-[var(--risk-critical)]" : "text-[var(--fg)]")
+          "text-2xl sm:text-3xl font-semibold font-mono-num tracking-tight " +
+          (tone === "alert"
+            ? "text-[var(--risk-critical)]"
+            : "text-[var(--fg)]")
         }
       >
         {display}
-        {suffix && <span className="text-base ml-1">{suffix}</span>}
+        {suffix && (
+          <span className="text-base font-normal text-[var(--fg-muted)] ml-1">
+            {suffix}
+          </span>
+        )}
       </motion.div>
-    </Card>
+    </div>
   );
 }

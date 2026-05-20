@@ -48,73 +48,97 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ==============================================
+   BPL MCH · WhatsApp-style premium minimal
+   Green / white / black. Restrained. No flash.
+   ============================================== */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Brand */
+  --primary: #00A884;            /* WhatsApp modern green — single brand color */
+  --primary-hover: #008F71;      /* hover state, slightly darker */
+  --primary-foreground: #FFFFFF;
+  --primary-50: #E7F8F3;         /* very light green tint for hover backgrounds */
+
+  /* Surfaces */
+  --surface: #FFFFFF;            /* pure white background */
+  --surface-alt: #F7F8FA;        /* subtle off-white for sections */
+  --background: #FFFFFF;
+  --foreground: #111B21;
+  --card: #FFFFFF;
+  --card-foreground: #111B21;
+  --popover: #FFFFFF;
+  --popover-foreground: #111B21;
+
+  /* Type */
+  --fg: #111B21;                 /* near-black, WhatsApp's text color */
+  --fg-muted: #667781;           /* WhatsApp's secondary text */
+  --fg-subtle: #8696A0;          /* tertiary text */
+
+  /* Borders & input */
+  --border: #E9EDEF;             /* hairline */
+  --input: #E9EDEF;
+  --ring: #00A884;
+
+  /* shadcn semantic tokens (mapped to our palette) */
+  --secondary: #F7F8FA;
+  --secondary-foreground: #111B21;
+  --muted: #F7F8FA;
+  --muted-foreground: #667781;
+  --accent: #E7F8F3;
+  --accent-foreground: #00A884;
+  --destructive: #B91C1C;
+
+  /* Risk indicators — muted, not flashy. Used ONLY for actual risk states. */
+  --risk-normal: #00A884;        /* same as brand — positive = green */
+  --risk-high: #B45309;          /* deep amber */
+  --risk-critical: #B91C1C;      /* deep red */
+
+  /* Charts (greyscale + brand) */
+  --chart-1: #00A884;
+  --chart-2: #667781;
+  --chart-3: #8696A0;
+  --chart-4: #B45309;
+  --chart-5: #B91C1C;
+
+  /* Sidebar tokens */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111B21;
+  --sidebar-primary: #00A884;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F7F8FA;
+  --sidebar-accent-foreground: #111B21;
+  --sidebar-border: #E9EDEF;
+  --sidebar-ring: #00A884;
+
+  /* Radius — modern subtle rounding */
+  --radius: 0.75rem;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+html, body {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+body {
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-malayalam {
+  font-family: var(--font-malayalam), system-ui, sans-serif;
+}
+
+.font-mono-num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Touch targets — ensure clickable elements are at least 44px on mobile */
+@media (max-width: 640px) {
+  button, a[role="button"], .btn, [data-touch] {
+    min-height: 44px;
+  }
 }
 
 @layer base {
@@ -127,37 +151,6 @@
   html {
     @apply font-sans;
   }
-}
-
-:root {
-  --primary: #0F4C75;
-  --primary-50: #E8F1F7;
-  --accent: #2D7A3E;
-  --surface: #FAFAF7;
-  --card: #FFFFFF;
-  --fg: #1A1F2C;
-  --fg-muted: #5A6373;
-  --border: #E2E5EA;
-  --risk-normal: #16A34A;
-  --risk-high: #D97706;
-  --risk-critical: #DC2626;
-}
-
-html {
-  background: var(--surface);
-}
-
-body {
-  font-feature-settings: "ss01", "cv11";
-}
-
-.font-malayalam {
-  font-family: var(--font-malayalam), system-ui, sans-serif;
-}
-
-.font-mono-num {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {

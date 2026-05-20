@@ -24,10 +24,16 @@ const NAV = [
   { href: "/admin/integrations", label: "Integrations", icon: Plug },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebar({
+  onNavigate,
+  className,
+}: {
+  onNavigate?: () => void;
+  className?: string;
+}) {
   const path = usePathname();
   return (
-    <nav className="w-52 shrink-0 border-r bg-[var(--card)] p-3 space-y-1">
+    <nav className={cn("w-60 shrink-0 p-3 space-y-1", className)}>
       {NAV.map(({ href, label, icon: Icon }) => {
         const active =
           href === "/admin" ? path === "/admin" : path.startsWith(href);
@@ -35,15 +41,16 @@ export function AdminSidebar() {
           <Link
             key={href}
             href={href}
+            onClick={onNavigate}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
               active
                 ? "bg-[var(--primary-50)] text-[var(--primary)] font-medium"
-                : "text-[var(--fg)] hover:bg-slate-50",
+                : "text-[var(--fg)] hover:bg-[var(--surface-alt)]",
             )}
           >
-            <Icon className="size-4" />
-            {label}
+            <Icon className="size-4 shrink-0" />
+            <span>{label}</span>
           </Link>
         );
       })}
