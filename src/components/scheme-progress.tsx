@@ -30,7 +30,7 @@ export function SchemeProgress({
             key={i}
             className={cn(
               "h-2 flex-1 rounded-full flex items-center justify-center",
-              i < disbursed ? "bg-[var(--accent)]" : "bg-[var(--border)]",
+              i < disbursed ? "bg-[var(--primary)]" : "bg-[var(--border)]",
             )}
           >
             {i < disbursed && <Check className="size-2 text-white" />}

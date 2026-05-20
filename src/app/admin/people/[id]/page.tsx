@@ -4,8 +4,8 @@ import {
   loadMother,
   loadChild,
 } from "@/lib/queries/beneficiary";
-import { Card } from "@/components/ui/card";
 import { RiskBadge } from "@/components/risk-badge";
+import { DataTable, DataTableHead, DataTableRow } from "@/components/data-table";
 import { formatBeneficiaryId } from "@/lib/beneficiary-id";
 import { format } from "date-fns";
 
@@ -23,9 +23,9 @@ export default async function AdminPeopleDetail({
     if (!m) notFound();
 
     return (
-      <div className="space-y-4">
+      <div className="max-w-7xl mx-auto space-y-6">
         <header className="space-y-1">
-          <h1 className="text-2xl font-semibold text-[var(--primary)]">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
             {m.name}
           </h1>
           <p className="text-sm text-[var(--fg-muted)] font-mono-num">
@@ -37,68 +37,101 @@ export default async function AdminPeopleDetail({
           </p>
         </header>
 
-        <div className="grid grid-cols-3 gap-4">
-          <Card className="p-4 space-y-2 col-span-1">
-            <h3 className="text-sm font-semibold">Profile</h3>
-            <p className="text-sm">Age: {m.age}</p>
-            <p className="text-sm">
-              LMP: {m.lmp ? format(new Date(m.lmp), "d MMM yyyy") : "—"}
-            </p>
-            <p className="text-sm">
-              EDD: {m.edd ? format(new Date(m.edd), "d MMM yyyy") : "—"}
-            </p>
-            <p className="text-sm">
-              BPL: {m.family.bplScore} · Tier {m.family.schemePriorityTier}
-            </p>
-            <p className="text-sm">ASHA: {m.family.asha?.name ?? "—"}</p>
-          </Card>
-          <Card className="p-4 space-y-3 col-span-2">
-            <h3 className="text-sm font-semibold">Visit history</h3>
-            <table className="w-full text-sm">
-              <thead className="text-xs text-[var(--fg-muted)] border-b">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 sm:p-5 space-y-2 lg:col-span-1">
+            <h3 className="text-sm font-semibold text-[var(--fg)]">Profile</h3>
+            <dl className="space-y-1.5 text-sm">
+              <div className="flex justify-between gap-3">
+                <dt className="text-[var(--fg-muted)]">Age</dt>
+                <dd className="font-medium">{m.age}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-[var(--fg-muted)]">LMP</dt>
+                <dd className="font-medium">
+                  {m.lmp ? format(new Date(m.lmp), "d MMM yyyy") : "—"}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-[var(--fg-muted)]">EDD</dt>
+                <dd className="font-medium">
+                  {m.edd ? format(new Date(m.edd), "d MMM yyyy") : "—"}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-[var(--fg-muted)]">BPL</dt>
+                <dd className="font-medium">
+                  {m.family.bplScore} · Tier {m.family.schemePriorityTier}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-[var(--fg-muted)]">ASHA</dt>
+                <dd className="font-medium">{m.family.asha?.name ?? "—"}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="lg:col-span-2 space-y-3">
+            <h3 className="text-sm font-semibold text-[var(--fg)] px-1">
+              Visit history
+            </h3>
+            <DataTable minWidth={560}>
+              <DataTableHead>
                 <tr>
-                  <th className="text-left py-1">Type</th>
-                  <th className="text-left py-1">Date</th>
-                  <th className="text-left py-1">BP</th>
-                  <th className="text-left py-1">Hb</th>
-                  <th className="text-left py-1">Risk</th>
+                  <th className="text-left px-4 py-2.5 font-medium">Type</th>
+                  <th className="text-left px-4 py-2.5 font-medium">Date</th>
+                  <th className="text-left px-4 py-2.5 font-medium">BP</th>
+                  <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">
+                    Hb
+                  </th>
+                  <th className="text-left px-4 py-2.5 font-medium">Risk</th>
                 </tr>
-              </thead>
+              </DataTableHead>
               <tbody>
                 {m.ancVisits.map((v) => (
-                  <tr key={"anc-" + v.id} className="border-b">
-                    <td className="py-2">ANC #{v.visitNo}</td>
-                    <td className="py-2">{format(v.visitDate, "d MMM")}</td>
-                    <td className="py-2">
+                  <DataTableRow key={"anc-" + v.id}>
+                    <td className="px-4 py-3 font-medium">ANC #{v.visitNo}</td>
+                    <td className="px-4 py-3 text-[var(--fg-muted)]">
+                      {format(v.visitDate, "d MMM")}
+                    </td>
+                    <td className="px-4 py-3 font-mono-num">
                       {v.bpSystolic}/{v.bpDiastolic}
                     </td>
-                    <td className="py-2">{v.hbValue ?? "—"}</td>
-                    <td className="py-2">
+                    <td className="px-4 py-3 font-mono-num hidden sm:table-cell">
+                      {v.hbValue ?? "—"}
+                    </td>
+                    <td className="px-4 py-3">
                       <RiskBadge level={v.riskLevel} />
                     </td>
-                  </tr>
+                  </DataTableRow>
                 ))}
                 {m.pncVisits.map((v) => (
-                  <tr key={"pnc-" + v.id} className="border-b">
-                    <td className="py-2">PNC D+{v.visitDay}</td>
-                    <td className="py-2">{format(v.visitDate, "d MMM")}</td>
-                    <td className="py-2">
+                  <DataTableRow key={"pnc-" + v.id}>
+                    <td className="px-4 py-3 font-medium">PNC D+{v.visitDay}</td>
+                    <td className="px-4 py-3 text-[var(--fg-muted)]">
+                      {format(v.visitDate, "d MMM")}
+                    </td>
+                    <td className="px-4 py-3 font-mono-num">
                       {v.bpSystolic ?? "—"}/{v.bpDiastolic ?? "—"}
                     </td>
-                    <td className="py-2">{v.hbValue ?? "—"}</td>
-                    <td className="py-2">—</td>
-                  </tr>
+                    <td className="px-4 py-3 font-mono-num hidden sm:table-cell">
+                      {v.hbValue ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 text-[var(--fg-muted)]">—</td>
+                  </DataTableRow>
                 ))}
                 {m.ancVisits.length === 0 && m.pncVisits.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="py-4 text-center text-xs text-[var(--fg-muted)]">
+                    <td
+                      colSpan={5}
+                      className="px-4 py-10 text-center text-sm text-[var(--fg-muted)]"
+                    >
                       No visits recorded yet.
                     </td>
                   </tr>
                 )}
               </tbody>
-            </table>
-          </Card>
+            </DataTable>
+          </div>
         </div>
       </div>
     );
@@ -107,9 +140,9 @@ export default async function AdminPeopleDetail({
   const c = await loadChild(parsed.id);
   if (!c) notFound();
   return (
-    <div className="space-y-4">
+    <div className="max-w-7xl mx-auto space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-[var(--primary)]">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
           {c.name ?? "Baby " + c.beneficiaryId12.slice(-4)}
         </h1>
         <p className="text-sm font-mono-num text-[var(--fg-muted)]">
@@ -119,40 +152,56 @@ export default async function AdminPeopleDetail({
           DOB {format(new Date(c.dob), "d MMM yyyy")} · {c.family.village}
         </p>
       </header>
-      <Card className="p-4 space-y-3">
-        <h3 className="text-sm font-semibold">Growth records</h3>
-        <table className="w-full text-sm">
-          <thead className="text-xs text-[var(--fg-muted)] border-b">
+
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-[var(--fg)] px-1">
+          Growth records
+        </h3>
+        <DataTable minWidth={560}>
+          <DataTableHead>
             <tr>
-              <th className="text-left py-1">Date</th>
-              <th className="text-left py-1">Weight</th>
-              <th className="text-left py-1">MUAC</th>
-              <th className="text-left py-1">Z-score</th>
-              <th className="text-left py-1">Class</th>
+              <th className="text-left px-4 py-2.5 font-medium">Date</th>
+              <th className="text-left px-4 py-2.5 font-medium">Weight</th>
+              <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">
+                MUAC
+              </th>
+              <th className="text-left px-4 py-2.5 font-medium">Z-score</th>
+              <th className="text-left px-4 py-2.5 font-medium">Class</th>
             </tr>
-          </thead>
+          </DataTableHead>
           <tbody>
             {c.growthRecords.map((g) => (
-              <tr key={g.id} className="border-b">
-                <td className="py-2">{format(g.recordedAt, "d MMM")}</td>
-                <td className="py-2">{g.weightKg} kg</td>
-                <td className="py-2">{g.muacCm} cm</td>
-                <td className="py-2 font-mono-num">
+              <DataTableRow key={g.id}>
+                <td className="px-4 py-3 text-[var(--fg-muted)]">
+                  {format(g.recordedAt, "d MMM")}
+                </td>
+                <td className="px-4 py-3 font-mono-num">{g.weightKg} kg</td>
+                <td className="px-4 py-3 font-mono-num hidden sm:table-cell">
+                  {g.muacCm} cm
+                </td>
+                <td className="px-4 py-3 font-mono-num">
                   {g.weightForHeightZ?.toFixed(2) ?? "—"}
                 </td>
-                <td className="py-2">{g.classification}</td>
-              </tr>
+                <td className="px-4 py-3">
+                  <span className="inline-flex px-2 py-0.5 rounded-full bg-[var(--surface-alt)] text-[var(--fg)] font-medium text-xs">
+                    {g.classification}
+                  </span>
+                </td>
+              </DataTableRow>
             ))}
             {c.growthRecords.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-4 text-center text-xs text-[var(--fg-muted)]">
+                <td
+                  colSpan={5}
+                  className="px-4 py-10 text-center text-sm text-[var(--fg-muted)]"
+                >
                   No growth records yet.
                 </td>
               </tr>
             )}
           </tbody>
-        </table>
-      </Card>
+        </DataTable>
+      </div>
     </div>
   );
 }

@@ -1,40 +1,60 @@
 import { db } from "@/db";
-import { Card } from "@/components/ui/card";
+import { DataTable, DataTableHead, DataTableRow } from "@/components/data-table";
 
 export default async function AdminFacilities() {
   const rows = await db.query.facilities.findMany();
   return (
-    <div className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-[var(--primary)]">Facilities</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
+          Facilities
+        </h1>
         <p className="text-sm text-[var(--fg-muted)]">
           {rows.length} facilities · SC / PHC / CHC / DH
         </p>
       </header>
-      <Card className="overflow-hidden p-0">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b">
+      <DataTable minWidth={640}>
+        <DataTableHead>
+          <tr>
+            <th className="text-left px-4 py-2.5 font-medium">Name</th>
+            <th className="text-left px-4 py-2.5 font-medium">Type</th>
+            <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">
+              Block
+            </th>
+            <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">
+              Coordinates
+            </th>
+          </tr>
+        </DataTableHead>
+        <tbody>
+          {rows.map((f) => (
+            <DataTableRow key={f.id}>
+              <td className="px-4 py-3 font-medium">{f.name}</td>
+              <td className="px-4 py-3">
+                <span className="inline-flex px-2 py-0.5 rounded-full bg-[var(--surface-alt)] text-[var(--fg)] font-medium text-xs">
+                  {f.type}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-[var(--fg-muted)] hidden sm:table-cell">
+                {f.block}
+              </td>
+              <td className="px-4 py-3 font-mono-num text-xs text-[var(--fg-muted)] hidden sm:table-cell">
+                {f.lat?.toFixed(2)}, {f.lng?.toFixed(2)}
+              </td>
+            </DataTableRow>
+          ))}
+          {rows.length === 0 && (
             <tr>
-              <th className="text-left p-3">Name</th>
-              <th className="text-left p-3">Type</th>
-              <th className="text-left p-3">Block</th>
-              <th className="text-left p-3">Coordinates</th>
+              <td
+                colSpan={4}
+                className="px-4 py-10 text-center text-sm text-[var(--fg-muted)]"
+              >
+                No facilities listed.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {rows.map((f) => (
-              <tr key={f.id} className="border-b">
-                <td className="p-3 font-medium">{f.name}</td>
-                <td className="p-3">{f.type}</td>
-                <td className="p-3">{f.block}</td>
-                <td className="p-3 font-mono-num text-xs">
-                  {f.lat?.toFixed(2)}, {f.lng?.toFixed(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+          )}
+        </tbody>
+      </DataTable>
     </div>
   );
 }

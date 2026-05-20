@@ -1,10 +1,10 @@
 import { db } from "@/db";
 import { schemeEnrollments } from "@/db/schema";
 import { desc } from "drizzle-orm";
-import { Card } from "@/components/ui/card";
 import { SchemeProgress } from "@/components/scheme-progress";
 import { SchemeComplianceChart } from "@/components/scheme-compliance-chart";
 import { getSchemeCompliance } from "@/lib/queries/admin-overview";
+import { DataTable, DataTableHead, DataTableRow } from "@/components/data-table";
 
 export default async function AdminSchemes() {
   const compliance = await getSchemeCompliance();
@@ -33,16 +33,19 @@ export default async function AdminSchemes() {
   const beneficiaryRows = [...grouped.values()].slice(0, 50);
 
   return (
-    <div className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-[var(--primary)]">Schemes</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
+          Schemes
+        </h1>
         <p className="text-sm text-[var(--fg-muted)]">
           PMMVY · JSY · JSSK · KASP disbursement tracking
         </p>
       </header>
-      <div className="grid grid-cols-2 gap-4">
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <SchemeComplianceChart data={compliance} />
-        <Card className="p-4 text-xs text-[var(--fg-muted)]">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 sm:p-5 text-xs text-[var(--fg-muted)] space-y-1.5">
           <p>
             <strong className="text-[var(--fg)]">PMMVY</strong> — Pradhan Mantri Matru Vandana Yojana (3 installments)
           </p>
@@ -55,33 +58,44 @@ export default async function AdminSchemes() {
           <p>
             <strong className="text-[var(--fg)]">KASP</strong> — Karunya Arogya Suraksha Padhathi (Kerala)
           </p>
-        </Card>
+        </div>
       </div>
-      <Card className="overflow-hidden p-0">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b">
+
+      <DataTable minWidth={640}>
+        <DataTableHead>
+          <tr>
+            <th className="text-left px-4 py-2.5 font-medium">Beneficiary</th>
+            <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Scheme</th>
+            <th className="text-left px-4 py-2.5 font-medium">Progress</th>
+          </tr>
+        </DataTableHead>
+        <tbody>
+          {beneficiaryRows.map((r, i) => (
+            <DataTableRow key={i}>
+              <td className="px-4 py-3 font-medium">{r.name}</td>
+              <td className="px-4 py-3 text-[var(--fg-muted)] hidden sm:table-cell">
+                {r.code}
+              </td>
+              <td className="px-4 py-3 w-1/2 min-w-[180px]">
+                <SchemeProgress
+                  code={r.code as "PMMVY" | "JSY" | "JSSK" | "KASP"}
+                  disbursed={r.disbursed}
+                />
+              </td>
+            </DataTableRow>
+          ))}
+          {beneficiaryRows.length === 0 && (
             <tr>
-              <th className="text-left p-3">Beneficiary</th>
-              <th className="text-left p-3">Scheme</th>
-              <th className="text-left p-3">Progress</th>
+              <td
+                colSpan={3}
+                className="px-4 py-10 text-center text-sm text-[var(--fg-muted)]"
+              >
+                No enrollments yet.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {beneficiaryRows.map((r, i) => (
-              <tr key={i} className="border-b">
-                <td className="p-3">{r.name}</td>
-                <td className="p-3">{r.code}</td>
-                <td className="p-3 w-1/2">
-                  <SchemeProgress
-                    code={r.code as "PMMVY" | "JSY" | "JSSK" | "KASP"}
-                    disbursed={r.disbursed}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+          )}
+        </tbody>
+      </DataTable>
     </div>
   );
 }

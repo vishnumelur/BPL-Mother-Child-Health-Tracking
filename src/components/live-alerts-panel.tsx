@@ -24,7 +24,7 @@ export function LiveAlertsPanel({ alerts }: { alerts: AlertItem[] }) {
           <li key={a.id}>
             <Link
               href={`/admin/alerts/${a.id}`}
-              className="block p-2 rounded-md hover:bg-slate-50"
+              className="block p-2 rounded-lg hover:bg-[var(--surface-alt)]"
             >
               <div className="flex items-center gap-2">
                 {a.type === "SOS" ? (
@@ -47,7 +47,7 @@ export function LiveAlertsPanel({ alerts }: { alerts: AlertItem[] }) {
                   {a.channels.map((c) => (
                     <span
                       key={c.to}
-                      className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-[var(--fg-muted)]"
+                      className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--surface-alt)] text-[var(--fg-muted)]"
                     >
                       {c.to} ✓
                     </span>

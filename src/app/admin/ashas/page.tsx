@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { sql } from "drizzle-orm";
-import { Card } from "@/components/ui/card";
+import { DataTable, DataTableHead, DataTableRow } from "@/components/data-table";
 
 export default async function AdminAshas() {
   const result = await db.execute(sql`
@@ -26,39 +26,59 @@ export default async function AdminAshas() {
   }>;
 
   return (
-    <div className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-[var(--primary)]">ASHAs</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
+          ASHAs
+        </h1>
         <p className="text-sm text-[var(--fg-muted)]">Performance leaderboard</p>
       </header>
-      <Card className="overflow-hidden p-0">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b">
+      <DataTable minWidth={720}>
+        <DataTableHead>
+          <tr>
+            <th className="text-left px-4 py-2.5 font-medium">Rank</th>
+            <th className="text-left px-4 py-2.5 font-medium">Name</th>
+            <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">
+              Sub-Centre
+            </th>
+            <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">
+              Families
+            </th>
+            <th className="text-right px-4 py-2.5 font-medium">Visits</th>
+            <th className="text-right px-4 py-2.5 font-medium">Critical</th>
+          </tr>
+        </DataTableHead>
+        <tbody>
+          {data.map((a, i) => (
+            <DataTableRow key={a.id}>
+              <td className="px-4 py-3 font-mono-num text-[var(--fg-muted)]">
+                #{i + 1}
+              </td>
+              <td className="px-4 py-3 font-medium">{a.name}</td>
+              <td className="px-4 py-3 text-[var(--fg-muted)] hidden sm:table-cell">
+                {a.facility ?? "—"}
+              </td>
+              <td className="px-4 py-3 text-right font-mono-num text-[var(--fg-muted)] hidden sm:table-cell">
+                {a.families}
+              </td>
+              <td className="px-4 py-3 text-right font-mono-num">{a.visits}</td>
+              <td className="px-4 py-3 text-right font-mono-num">
+                {a.critical_caught}
+              </td>
+            </DataTableRow>
+          ))}
+          {data.length === 0 && (
             <tr>
-              <th className="text-left p-3">Rank</th>
-              <th className="text-left p-3">Name</th>
-              <th className="text-left p-3">Sub-Centre</th>
-              <th className="text-right p-3">Families</th>
-              <th className="text-right p-3">Visits</th>
-              <th className="text-right p-3">Critical caught</th>
+              <td
+                colSpan={6}
+                className="px-4 py-10 text-center text-sm text-[var(--fg-muted)]"
+              >
+                No ASHA records found.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {data.map((a, i) => (
-              <tr key={a.id} className="border-b">
-                <td className="p-3 font-mono-num">#{i + 1}</td>
-                <td className="p-3 font-medium">{a.name}</td>
-                <td className="p-3">{a.facility ?? "—"}</td>
-                <td className="p-3 text-right font-mono-num">{a.families}</td>
-                <td className="p-3 text-right font-mono-num">{a.visits}</td>
-                <td className="p-3 text-right font-mono-num">
-                  {a.critical_caught}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+          )}
+        </tbody>
+      </DataTable>
     </div>
   );
 }

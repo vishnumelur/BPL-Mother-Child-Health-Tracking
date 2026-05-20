@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
 
 const INTEGRATIONS = [
@@ -34,30 +33,36 @@ const INTEGRATIONS = [
 
 export default function AdminIntegrations() {
   return (
-    <div className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-semibold text-[var(--primary)]">Integrations</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--fg)] tracking-tight">
+          Integrations
+        </h1>
         <p className="text-sm text-[var(--fg-muted)]">
           Connection status with national health systems
         </p>
       </header>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {INTEGRATIONS.map((i) => (
-          <Card key={i.code} className="p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium">{i.name}</h3>
-              <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-[var(--risk-normal)]/10 text-[var(--risk-normal)]">
+          <div
+            key={i.code}
+            className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 sm:p-5 space-y-2"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-medium text-[var(--fg)]">{i.name}</h3>
+              <span className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-[var(--primary-50)] text-[var(--primary)] font-medium">
                 <Check className="size-3" /> {i.status}
               </span>
             </div>
             <p className="text-sm text-[var(--fg-muted)]">{i.description}</p>
-          </Card>
+          </div>
         ))}
       </div>
-      <Card className="p-4 text-xs text-[var(--fg-muted)]">
-        Note: this demo simulates each integration&apos;s status. Production builds
-        will use the official sandbox endpoints with NHA / NHSRC accreditation.
-      </Card>
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-alt)] p-4 sm:p-5 text-xs text-[var(--fg-muted)]">
+        Note: this demo simulates each integration&apos;s status. Production
+        builds will use the official sandbox endpoints with NHA / NHSRC
+        accreditation.
+      </div>
     </div>
   );
 }
