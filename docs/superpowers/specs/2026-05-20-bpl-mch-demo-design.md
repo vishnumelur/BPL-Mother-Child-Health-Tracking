@@ -73,7 +73,7 @@ ONE Next.js 16 App Router app on Vercel Hobby
 - **Animation:** motion/react (Framer Motion)
 - **Charts:** Recharts
 - **Icons:** Lucide React
-- **Fonts:** Geist Sans + Geist Mono (English), Noto Sans Malayalam (`next/font/google`)
+- **Fonts:** Geist Sans + Geist Mono (English, via the `geist` npm package), Noto Sans Malayalam (via `next/font/google`)
 - **E2E test:** Playwright (happy-path only)
 
 ---
@@ -193,7 +193,14 @@ Hidden behind `Ctrl+Shift+D` key chord. Not linked from the UI.
 
 ### Live-feel mechanics
 
-When SOS fires in `/field/sos`, the Server Action calls `revalidatePath('/admin')`. A `/admin` tab open during the demo updates the Live Alerts panel within ~1 second. That cross-tab live update is the most memorable moment of the demo.
+Two cooperating mechanisms keep `/admin` "live" during the demo:
+
+1. **Server-side revalidation.** Every Server Action that mutates demo-visible state (`raiseSos`, `saveAncVisit`, `saveGrowthRecord`, etc.) ends with `revalidatePath('/admin')` and the relevant child paths. This invalidates the RSC cache.
+2. **Client-side polling on `/admin`.** A small `setInterval` (~8s) on the dashboard's client wrapper triggers `router.refresh()`. This catches updates when no Server Action originated from the admin tab itself.
+
+The combination means: an SOS raised in `/field/sos` (different tab) shows up in `/admin`'s Live Alerts panel within ~1 second (revalidation hits the server-side cache; the next router-refresh tick pulls the new data). This cross-tab live update is the most memorable moment of the demo.
+
+No WebSockets, no Server-Sent Events, no Pusher. Plain RSC + polling. Free tier compatible.
 
 ---
 
@@ -250,8 +257,8 @@ Dark mode: **not built**. Light mode reads better on projectors.
 
 ### Typography
 
-- **English UI:** Geist Sans
-- **Tabular figures (KPIs):** Geist Mono
+- **English UI:** Geist Sans (via the `geist` npm package — Geist is not on Google Fonts; do not use `next/font/google` for it)
+- **Tabular figures (KPIs):** Geist Mono (same `geist` package)
 - **Malayalam:** Noto Sans Malayalam (via `next/font/google`)
 - **Base size:** 16px on `/admin`, **17px on `/field`** (sunlight readability)
 - **Line height:** 1.55 body, 1.3 headings
@@ -371,9 +378,9 @@ Every reminder row has a "Preview SMS" link → modal with full Malayalam Unicod
 
 ### Performance
 
-- **Neon free tier suspends after 5 min idle.** Mitigation: `/demo/warmup` endpoint hit at start of pitch; `/admin` dashboard's revalidation poller keeps DB warm.
+- **Neon free tier suspends after 5 min idle.** Mitigation: `/demo/warmup` endpoint hit at start of pitch; `/admin` dashboard's ~8s `router.refresh()` polling keeps DB warm.
 - **Cold starts:** Server Actions on Vercel Fluid Compute typically <100ms after warm-up.
-- **Bundle discipline:** RSC by default. `"use client"` only for: OfflineToggle, SOS modal, offline queue hook, dashboard revalidation poller.
+- **Bundle discipline:** RSC by default. `"use client"` only for: OfflineToggle, SOS modal, offline queue hook, dashboard polling wrapper.
 - **No heavy libs:** stylized SVG for Palakkad map (no Mapbox), Recharts for charts (tree-shakable).
 
 ### Error handling
@@ -438,7 +445,7 @@ Every Phase 1–5 feature in the EOI is accounted for. 🎯 = hero flow (scripte
 |---|---|---|
 | **Phase 1 — Onboarding** | | |
 | BPL family registration + 12-digit ABHA-aligned ID | 🎯 | `/field/register` |
-| OTP authentication | 🎯 | Inside registration |
+| OTP authentication UX (screen + entry + verification animation) | 🎯 | Inside registration — *the UX is hero; the SMS delivery itself is mocked (any 6-digit code accepted, or hardcoded `123456`)* |
 | OTP offline fallback | ✅ | Offline sync toggle |
 | Mother + Child + Family profile linking | 🎯 | After registration |
 | ASHA/ANM mapping | ✅ | Beneficiary card |
